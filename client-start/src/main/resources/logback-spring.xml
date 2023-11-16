@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <property name="log.path" value="logs/" />
+
+    <appender name="consoleApp" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d{HH:mm:ss} [%thread] %-5level %logger{56} %method:%L - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <appender name="fileWarnApp" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>
+                %d{HH:mm:ss} [%thread] %-5level %logger{56} %method:%L - %msg%n
+            </pattern>
+        </encoder>
+
+        <!-- 设置滚动策略 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 路径 -->
+            <fileNamePattern>${log.path}/%d{yyyy-MM}/%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- 控制保留的归档文件的最大数量，超出数量就删除旧文件，假设设置每个月滚动，
+            且<maxHistory> 是1，则只保存最近1个月的文件，删除之前的旧文件 -->
+            <MaxHistory>1</MaxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+    </appender>
+
+    <root level="WARN">
+        <appender-ref ref="consoleApp"/>
+        <appender-ref ref="fileWarnApp"/>
+    </root>
+</configuration>
+
+<!--<configuration>-->
+
+<!--<appender name="consoleApp" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--    <layout class="ch.qos.logback.classic.PatternLayout">-->
+<!--        <pattern>-->
+<!--            %date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n-->
+<!--        </pattern>-->
+<!--    </layout>-->
+<!--</appender>-->
+
+<!--<appender name="fileInfoApp" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--        <level>ERROR</level>-->
+<!--        <onMatch>DENY</onMatch>-->
+<!--        <onMismatch>ACCEPT</onMismatch>-->
+<!--    </filter>-->
+<!--    <encoder>-->
+<!--        <pattern>-->
+<!--            %date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n-->
+<!--        </pattern>-->
+<!--    </encoder>-->
+<!--    &lt;!&ndash; 滚动策略 &ndash;&gt;-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--        &lt;!&ndash; 路径 &ndash;&gt;-->
+<!--        <fileNamePattern>app_log/log/app.info.%d.log</fileNamePattern>-->
+<!--    </rollingPolicy>-->
+<!--</appender>-->
+
+<!--<appender name="fileErrorApp" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--        <level>ERROR</level>-->
+<!--    </filter>-->
+<!--    <encoder>-->
+<!--        <pattern>-->
+<!--            %date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n-->
+<!--        </pattern>-->
+<!--    </encoder>-->
+
+<!--    &lt;!&ndash; 设置滚动策略 &ndash;&gt;-->
+<!--    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--        &lt;!&ndash; 路径 &ndash;&gt;-->
+<!--        <fileNamePattern>app_log/log/app.err.%d.log</fileNamePattern>-->
+
+<!--        &lt;!&ndash; 控制保留的归档文件的最大数量，超出数量就删除旧文件，假设设置每个月滚动，-->
+<!--        且<maxHistory> 是1，则只保存最近1个月的文件，删除之前的旧文件 &ndash;&gt;-->
+<!--        <MaxHistory>1</MaxHistory>-->
+
+<!--    </rollingPolicy>-->
+<!--</appender>-->
+<!--<root level="INFO">-->
+<!--    <appender-ref ref="consoleApp"/>-->
+<!--    <appender-ref ref="fileInfoApp"/>-->
+<!--    <appender-ref ref="fileErrorApp"/>-->
+<!--</root>-->
+<!--</configuration>-->
+
+<!--<configuration scan="true" scanPeriod="60 seconds" debug="false">-->
+<!--    <contextName>logback</contextName>-->
+
+<!--    <springProperty scope="context" name="LOG_PATH" source="logging.file.path"/>-->
+
+<!--    &lt;!&ndash;控制台输出内容的颜色转换以及格式&ndash;&gt;-->
+<!--    <substitutionProperty name="logging.pattern.console"-->
+<!--                          value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(-&#45;&#45;){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>-->
+<!--    &lt;!&ndash;日志文件输出内容的格式&ndash;&gt;-->
+<!--    <substitutionProperty name="logging.pattern.file"-->
+<!--                          value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } -&#45;&#45; [%t] %-40.40logger{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>-->
+
+<!--    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>-->
+<!--    <conversionRule conversionWord="wex"-->
+<!--                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>-->
+<!--    <conversionRule conversionWord="wEx"-->
+<!--                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>-->
+
+<!--    &lt;!&ndash; 输出到控制台 &ndash;&gt;-->
+<!--    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">-->
+<!--        &lt;!&ndash;控制台使用layout节点&ndash;&gt;-->
+<!--        <layout class="ch.qos.logback.classic.PatternLayout">-->
+<!--            <pattern>-->
+<!--                ${logging.pattern.console}-->
+<!--            </pattern>-->
+<!--        </layout>-->
+<!--    </appender>-->
+
+<!--    &lt;!&ndash;按天生成日志&ndash;&gt;-->
+<!--    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <Prudent>true</Prudent>-->
+<!--        &lt;!&ndash;滚动策略，我配置了按天生成日志文件&ndash;&gt;-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            &lt;!&ndash;相对路径，生成的文件就在项目根目录下&ndash;&gt;-->
+<!--            <FileNamePattern>-->
+<!--                ${LOG_PATH}/%d{yyyy-MM}/%d{yyyy-MM-dd}.log-->
+<!--            </FileNamePattern>-->
+<!--            &lt;!&ndash;注意超过365天的日志文件会被删除，即使已经按天分开也会删除&ndash;&gt;-->
+<!--            <MaxHistory>365</MaxHistory>-->
+<!--        </rollingPolicy>-->
+<!--        &lt;!&ndash;日志文件里只保存ERROR及以上级别的日志&ndash;&gt;-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>DEBUG</level>-->
+<!--        </filter>-->
+<!--        &lt;!&ndash;文件使用encoder节点&ndash;&gt;-->
+<!--        <encoder>-->
+<!--            <Pattern>-->
+<!--                ${logging.pattern.file}-->
+<!--            </Pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    &lt;!&ndash;这个logger里的配置相当于之前yml里的logging.level.com.lpc: trace&ndash;&gt;-->
+<!--    &lt;!&ndash;additivity的作用&ndash;&gt;-->
+<!--    &lt;!&ndash;true，则子Logger不止会在自己的appender里输出，还会在root的logger的appender里输出&ndash;&gt;-->
+<!--    &lt;!&ndash;而这个logger里没配置appender，所以得交给root打印&ndash;&gt;-->
+<!--    &lt;!&ndash;所以com.lpc包里的日志从TRACE级别开始&ndash;&gt;-->
+<!--    &lt;!&ndash;其他包里的日志根据root的配置从INFO级别开始打印&ndash;&gt;-->
+<!--    <logger name="com.lazycoder" level="INFO"></logger>-->
+<!--    <root level="INFO">-->
+<!--        <appender-ref ref="console"/>-->
+<!--        <appender-ref ref="file"/>-->
+<!--    </root>-->
+
+<!--</configuration>-->

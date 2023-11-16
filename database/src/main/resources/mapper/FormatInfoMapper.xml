@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.FormatInfoMapper">
+
+    <!-- 表名 -->
+    <sql id="table">formatInfo</sql>
+
+
+    <!-- 添加模块 -->
+    <insert id="addAdditionalSetInfoList" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        formatType, additionalSerialNumber,
+        numOfVariable,
+        formatState,
+        numOfAttachedFile,
+        functionNameNum,
+        attachedFileParam,
+        setTheTypeOfSetCodeParam,
+        numOfSetCodeType,
+        numOfSubCodeFile,
+        numOfFunctionCodeType
+        )
+        values
+        <foreach collection="list" item="additionalInfo" index="index"
+                 separator=",">
+            (
+            #{additionalInfo.formatType}, #{additionalInfo.additionalSerialNumber},
+            #{additionalInfo.numOfVariable},
+            #{additionalInfo.formatState},
+            #{additionalInfo.numOfAttachedFile},
+            #{additionalInfo.functionNameNum},
+            #{additionalInfo.attachedFileParam},
+            #{additionalInfo.setTheTypeOfSetCodeParam},
+            #{additionalInfo.numOfSetCodeType},
+            #{additionalInfo.numOfSubCodeFile},
+            #{additionalInfo.numOfFunctionCodeType}
+            )
+        </foreach>
+    </insert>
+
+
+    <!-- 更改模块 -->
+    <update id="updateMainSetInfo"
+            parameterType="com.lazycoder.database.model.MainInfo">
+        update
+        <include refid="table"/>
+        set
+        numOfVariable = #{numOfVariable},
+        formatState = #{formatState},
+        numOfAttachedFile = #{numOfAttachedFile},
+        functionNameNum =
+        #{functionNameNum},
+        attachedFileParam = #{attachedFileParam},
+        setTheTypeOfSetCodeParam = #{setTheTypeOfSetCodeParam},
+        numOfSetCodeType = #{numOfSetCodeType},
+        numOfSubCodeFile =
+        #{numOfSubCodeFile},
+        numOfFunctionCodeType =
+        #{numOfFunctionCodeType}
+        where
+        formatType = #{formatType}
+    </update>
+
+    <!-- 更改可选模板格式的附带文件数量 -->
+    <update id="updateNumOfAdditionalAttachedFile"
+            parameterType="com.lazycoder.database.model.AdditionalInfo">
+        update
+        <include refid="table"/>
+        set
+        numOfAttachedFile = #{numOfAttachedFile}
+        where
+        additionalSerialNumber = #{additionalSerialNumber} and
+        formatType = #{formatType}
+    </update>
+
+    <!-- 删除所有可选模板 -->
+    <delete id="delAllAdditionalSetInfo">
+        delete from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+    </delete>
+
+
+    <select id="getMainInfo"
+            resultType="com.lazycoder.database.model.MainInfo">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+    </select>
+
+
+    <select id="getAdditionalInfo"
+            resultType="com.lazycoder.database.model.AdditionalInfo">
+        select * from
+        <include refid="table"/>
+        where
+        additionalSerialNumber = #{additionalSerialNumber} and
+        formatType = #{formatType}
+    </select>
+
+    <select id="getSetTypeParamOf" resultType="java.lang.String">
+        select setTheTypeOfSetCodeParam from
+        <include refid="table"/>
+        where
+        additionalSerialNumber = #{additionalSerialNumber} and
+        formatType = #{formatType}
+    </select>
+
+    <select id="getAdditionalInfoList"
+            resultType="com.lazycoder.database.model.AdditionalInfo">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+    </select>
+
+
+</mapper>

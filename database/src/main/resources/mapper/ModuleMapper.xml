@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.ModuleMapper">
+
+    <!-- 表名 -->
+    <sql id="table">module</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.Module">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addModule"
+            parameterType="com.lazycoder.database.model.Module">
+        insert into
+        <include refid="table"/>
+        (
+        moduleId,
+        className, moduleName,
+        note, indexParam,
+        usingRangeParam,
+        needModuleParam, noUseModuleParam,
+        useSettingParam, enabledState
+        )
+        values
+        (
+        #{moduleId},
+        #{className}, #{moduleName},
+        #{note}, #{indexParam},
+        #{usingRangeParam}, #{needModuleParam},#{noUseModuleParam},
+        #{useSettingParam}, #{enabledState}
+        )
+    </insert>
+
+
+    <!-- 获取所有非必选的模块 -->
+    <select id="getModulesListThatAreNotRequired"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where useSettingParam = #{useSettingParam}
+        order by indexParam
+    </select>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getModule" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        className = #{className} and
+        moduleName = #{moduleName}
+    </select>
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getModuleById" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+    </select>
+
+
+    <!-- 更改模块信息 -->
+    <update id="setModuleInfo"
+            parameterType="com.lazycoder.database.model.Module">
+        update
+        <include refid="table"/>
+        set
+        usingRangeParam = #{usingRangeParam},
+        needModuleParam =
+        #{needModuleParam},
+        enabledState = #{enabledState},
+        noUseModuleParam =
+        #{noUseModuleParam},
+        useSettingParam = #{useSettingParam}
+        where
+        moduleName = #{moduleName} and
+        className = #{className}
+    </update>
+
+    <!-- 查询除了输入的模块和非模块以外所有的模块 -->
+    <select id="getModuleListExceptNonModuleAnd" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        "moduleId" != #{moduleId}
+    </select>
+
+    <!-- 查询usingRangeParam字段带有usingObjectParam的所有模块 -->
+    <select id="getAllModulesUsedby" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        usingRangeParam like '%${usingObjectParam}%' order by
+        case
+        when ( className in ( select className from
+        <include refid="table"/>
+        where className ='非模块' ) ) then
+        0 else 1
+        end,
+        className
+    </select>
+
+    <!-- 按条件查询对应模块 -->
+    <select id="getModuleList" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        <if test="className!=null or usingRangeParam!=null or useSettingValue > -1">
+            where
+        </if>
+        <if test="className!=null">
+            className = #{className}
+        </if>
+        <if test="className!=null and usingRangeParam!=null">
+            and
+        </if>
+        <if test="usingRangeParam!=null">
+            usingRangeParam like '%${usingRangeParam}%'
+        </if>
+        <if test="(className!=null or usingRangeParam!=null) and useSettingValue > -1">
+            and
+        </if>
+        <if test="useSettingValue > -1">
+            useSettingParam like '%&quot;${useSettingValue}&quot;%'
+        </if>
+        order by indexParam asc
+    </select>
+
+    <!-- 获取使用了某某模块的所有模块 -->
+    <select id="getModulesListThatUsedTheModule" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        needModuleParam like '%${moduleId}%'
+        order by indexParam desc
+    </select>
+
+    <!-- 获取设置了不能使用某某模块的所有模块 -->
+    <select id="getModulesListThatCanNotUsedTheModule" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        noUseModuleParam like '%${moduleId}%'
+        order by indexParam desc
+    </select>
+
+    <!-- 查询所有模块 -->
+    <select id="getAllModuleList" resultMap="result">
+        select * from
+        <include refid="table"/>
+        order by indexParam asc
+    </select>
+
+    <!-- 获取使用了某某模块的所有模块 -->
+    <select id="getModuleIdOrderByIndexParamAsc" parameterType="java.lang.String"
+            resultType="java.lang.String">
+        select moduleId from
+        <include refid="table"/>
+        where moduleId IN
+        <foreach collection="list" item="moduleIdParam" open="(" close=")" separator=",">
+            #{moduleIdParam}
+        </foreach>
+        order by indexParam asc
+    </select>
+
+
+    <!-- 查询有没有添加过该分类 -->
+    <select id="selectExist" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select 1 from
+        <include refid="table"/>
+        where moduleName = #{moduleName} and
+        className = #{className}
+    </select>
+
+    <!-- 删除模块 -->
+    <delete id="delModule" parameterType="java.lang.String">
+        delete from
+        <include refid="table"/>
+        where
+        className = #{className} and
+        moduleName = #{moduleName}
+    </delete>
+
+
+    <!-- 重命名分类 -->
+    <update id="renameClassName">
+        update
+        <include refid="table"/>
+        set
+        className = #{newClassName}
+        where
+        className = #{oldClassName}
+    </update>
+
+    <!-- 更改模块名 -->
+    <update id="updateModule" parameterType="com.lazycoder.database.model.Module">
+        update
+        <include refid="table"/>
+        set
+        moduleName = #{moduleName},
+        className = #{className},
+        note = #{note},
+        indexParam = #{indexParam}
+        where
+        moduleId = #{moduleId}
+    </update>
+
+</mapper>

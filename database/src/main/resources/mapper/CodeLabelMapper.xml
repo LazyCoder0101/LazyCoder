@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.CodeLabelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">codeLabel</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.CodeLabel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addCodeLabel"
+            parameterType="com.lazycoder.database.model.CodeLabel">
+        insert into
+        <include refid="table"/>
+        (codeLabelId,
+        codeLabelShowText
+        )
+        values
+        (
+        #{codeLabelId},
+        #{codeLabelShowText}
+        )
+    </insert>
+
+    <!-- 删除模块 -->
+    <delete id="delCodeLabelById"
+            parameterType="java.lang.String">
+        delete from
+        <include refid="table"/>
+        where
+        codeLabelId = #{codeLabelId}
+    </delete>
+
+    <!-- 更改模块 -->
+    <update id="updateCodeLabel"
+            parameterType="com.lazycoder.database.model.CodeLabel">
+        update
+        <include refid="table"/>
+        set
+        codeLabelShowText = #{codeLabelShowText}
+        where
+        codeLabelId = #{codeLabelId}
+    </update>
+
+    <!-- 查询对应模块的选项名 废弃不用 -->
+    <select id="getCodeLabelList"
+            resultType="com.lazycoder.database.model.CodeLabel">
+        select * from
+        <include refid="table"/>
+    </select>
+
+    <!-- 查询选项名 -->
+    <select id="getCodeLabelById"
+            parameterType="java.lang.String"
+            resultType="com.lazycoder.database.model.CodeLabel">
+        select * from
+        <include refid="table"/>
+        where
+        codeLabelId = #{codeLabelId}
+    </select>
+
+    <select id="selectExistByShowText" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select 1 from
+        <include refid="table"/>
+        where
+        codeLabelShowText = #{codeLabelShowText}
+    </select>
+
+</mapper>

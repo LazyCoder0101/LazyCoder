@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.5.6</version><!-- 原来：1.5.2.RELEASE  2.2.6.RELEASE --><!-- lookup parent from repository -->
+        <relativePath/>
+    </parent>
+
+
+    <groupId>com.lazycoder</groupId>
+    <artifactId>client-start</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>main</name>
+    <description>客户端主函数入口</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <!--        <output.dependence.file.path>lannonglib/</output.dependence.file.path>-->
+    </properties>
+    <!--    <properties>-->
+    <!--        <java.version>1.8</java.version>-->
+    <!--    </properties>-->
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>2.5.6</version>
+            <exclusions>
+                <!-- 暂时用不上内置tomcat，去掉 -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+
+                <!-- 暂时不需要安全管理，去掉 -->
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-security</artifactId>
+                </exclusion>
+            </exclusions>
+            <!--            <exclusions>-->
+            <!--                <exclusion>-->
+            <!--                    <groupId>org.springframework.boot</groupId>-->
+            <!--                    <artifactId>spring-boot-starter-logging</artifactId>-->
+            <!--                </exclusion>-->
+            <!--            </exclusions>-->
+        </dependency>
+
+
+        <!--        <dependency>-->
+        <!--            <groupId>net.logstash.logback</groupId>-->
+        <!--            <artifactId>logstash-logback-encoder</artifactId>-->
+        <!--            <version>4.11</version>-->
+        <!--        </dependency>-->
+
+        <!--用于解决日志不打印问题-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.slf4j</groupId>-->
+        <!--            <artifactId>slf4j-api</artifactId>-->
+        <!--            <version>1.8.0-beta0</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.slf4j</groupId>-->
+        <!--            <artifactId>slf4j-simple</artifactId>-->
+        <!--            <version>1.8.0-beta0</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-log4j2</artifactId>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-web</artifactId>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.jna</groupId>-->
+        <!--            <artifactId>jna</artifactId>-->
+        <!--            <version>4.4.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>com.jna.platform</groupId>-->
+        <!--            <artifactId>jna-platform</artifactId>-->
+        <!--            <version>4.4.0</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.fusesource</groupId>-->
+        <!--            <artifactId>sigar</artifactId>-->
+        <!--            <version>1.6.4</version>-->
+        <!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>lazy-coder-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>database</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>ui-author</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>ui-code-generation</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>ui-datasource-edit</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
+        <!--        <dependency>-->
+        <!--            <groupId>io.netty</groupId>-->
+        <!--            <artifactId>netty-all</artifactId>-->
+        <!--            <version>4.1.36.Final</version>-->
+        <!--        </dependency>-->
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <classifier>exec</classifier>
+                </configuration>
+            </plugin>
+
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>license-maven-plugin</artifactId>-->
+            <!--                <version>2.0.0</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <goals>-->
+            <!--                            &lt;!&ndash; 该插件有很多种执行目标，比如 license-list 是用来列出可用的 license，add-third-party 用来检测单个项目中的 license &ndash;&gt;-->
+            <!--                            &lt;!&ndash; aggregate-add-third-party 表示检测多模块项目的 license &ndash;&gt;-->
+            <!--                            <goal>aggregate-add-third-party</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                &lt;!&ndash; 设置配置，以下配置都是非必须的 &ndash;&gt;-->
+            <!--                <configuration>-->
+            <!--                    &lt;!&ndash; 设置检测结果文件的存放目录 &ndash;&gt;-->
+            <!--                    <outputDirectory>${basedir}/target/generated-sources/license</outputDirectory>-->
+            <!--                    &lt;!&ndash; 设置检测结果文件，默认是 txt 文件 &ndash;&gt;-->
+            <!--                    <thirdPartyFilename>LICENSE_THIRD_PARTY.csv</thirdPartyFilename>-->
+            <!--                    &lt;!&ndash; 设置检测结果文件的样式，默认的样式会生成 txt 文件，我觉得不方便查看，在网上找到这么一个 csv 文件的样式，方便在 Excel 中进行分析，使用的是 FreeMarker &ndash;&gt;-->
+            <!--                    &lt;!&ndash; 不熟悉 FreeMarker 的话，还是比较难改样式的，官网只提供了默认的样式，在后文会将该文件内容贴出来 &ndash;&gt;-->
+            <!--                    <fileTemplate>${basedir}/src/license/third-party-file.ftl</fileTemplate>-->
+            <!--                    &lt;!&ndash; mvn 命令会从不同的 repository 中下载 license 文件，经常会出现请求超时的情况，默认超时时间是 5 秒，将其调整为 10 秒 &ndash;&gt;-->
+            <!--                    <connectionRequestTimeout>10000</connectionRequestTimeout>-->
+            <!--                    <connectTimeout>10000</connectTimeout>-->
+            <!--                    <socketTimeout>10000</socketTimeout>-->
+            <!--                    &lt;!&ndash; 有些依赖可能检测不到 license、mvn 检测出来的 license 有误，或者你需要对某些模块的 license 自己指定，将该配置设置为 true &ndash;&gt;-->
+            <!--                    &lt;!&ndash; 默认配置在 ${basedir}/src/license/THIRD-PARTY.properties 文件中，稍后进行解释 &ndash;&gt;-->
+            <!--                    <useMissingFile>true</useMissingFile>-->
+            <!--                    &lt;!&ndash; 排除项目中某些 groupId，不对其进行检测，比如自己写的模块，是没必要进行检测的 &ndash;&gt;-->
+            <!--                    <excludedGroups>io\.leo\.test</excludedGroups>-->
+            <!--                    &lt;!&ndash; 由于不同依赖中使用的 license 名称不同，为了便于自己分类管理，可以将 license 进行合并，比如以下将 Apache 系列的 license 都合并为 The Apache Software License &ndash;&gt;-->
+            <!--                    <licenseMerges>-->
+            <!--                        &lt;!&ndash; 第一个为合并之后的 license 名称，之后每个 license 以 | 分隔 &ndash;&gt;-->
+            <!--                        <licenseMerge>-->
+            <!--                            The Apache Software License-->
+            <!--                            |Apache-->
+            <!--                            |ASF 2.0-->
+            <!--                            |Apache v2-->
+            <!--                            |The Apache Software License, Version 2.0-->
+            <!--                        </licenseMerge>-->
+            <!--                        <licenseMerge>-->
+            <!--                            BSD License-->
+            <!--                            |BSD-->
+            <!--                            |BSD-2-Clause-->
+            <!--                            |The BSD 3-Clause License-->
+            <!--                        </licenseMerge>-->
+            <!--                    </licenseMerges>-->
+            <!--                    &lt;!&ndash; failIfWarning 配合这两个属性使用 <includedLicenses> <excludedLicenses> &ndash;&gt;-->
+            <!--                    &lt;!&ndash; <includedLicenses> 表示白名单，license 一定要在这个列表中 &ndash;&gt;-->
+            <!--                    &lt;!&ndash; <excludedLicenses> 表示黑名单，这个列表中的 license 一定不能出现 &ndash;&gt;-->
+            <!--                    &lt;!&ndash; failIfWarning 设置为 true，表示 license 不在白名单中、或 license 在黑名单中，将会构建失败。结合这个功能，非常方便看出项目中是否有非法 license &ndash;&gt;-->
+            <!--                    <failIfWarning>true</failIfWarning>-->
+            <!--                </configuration>-->
+            <!--            </plugin>-->
+
+            <!--            &lt;!&ndash; 把项目依赖的第三方包打包在target/lib下 &ndash;&gt;-->
+            <!--            <plugin>-->
+            <!--                <groupId>org.apache.maven.plugins</groupId>-->
+            <!--                <artifactId>maven-dependency-plugin</artifactId>-->
+            <!--                <version>3.1.1</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>copy-dependencies</id>-->
+            <!--                        <phase>package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>copy-dependencies</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <outputDirectory>${project.build.directory}/lib</outputDirectory>-->
+            <!--                            <excludeTransitive>false</excludeTransitive>-->
+            <!--                            <stripVersion>false</stripVersion>-->
+            <!--                            <includeScope>runtime</includeScope>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+        </plugins>
+    </build>
+
+    <!--    <build>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.apache.maven.plugins</groupId>-->
+    <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+    <!--                <version>3.8.1</version>-->
+    <!--                <configuration>-->
+    <!--                    <source>17</source>-->
+    <!--                    <target>17</target>-->
+    <!--                    <encoding>UTF-8</encoding>-->
+    <!--                    <compilerArguments>-->
+    <!--                        &lt;!&ndash; 打包本地jar包 &ndash;&gt;-->
+    <!--                        <extdirs>${project.basedir}/lib</extdirs>-->
+    <!--                    </compilerArguments>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+
+    <!--        &lt;!&ndash; 打包所有jar包 &ndash;&gt;-->
+    <!--        <resources>-->
+    <!--            <resource>-->
+    <!--                <directory>lib</directory>-->
+    <!--                <targetPath>BOOT-INF/lib/</targetPath>-->
+    <!--                <includes>-->
+    <!--                    <include>**/*.jar</include>-->
+    <!--                </includes>-->
+    <!--            </resource>-->
+
+    <!--            &lt;!&ndash; 某些情况下，打包后运行不起来需要打开注释 &ndash;&gt;-->
+    <!--            &lt;!&ndash; <resource>-->
+    <!--                <directory>src/main/resources</directory>-->
+    <!--                <targetPath>BOOT-INF/classes/</targetPath>-->
+    <!--            </resource> &ndash;&gt;-->
+    <!--        </resources>-->
+    <!--    </build>-->
+
+</project>

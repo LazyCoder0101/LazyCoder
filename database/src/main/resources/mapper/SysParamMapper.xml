@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.SysParamMapper">
+
+    <!-- 表名 -->
+    <sql id="table">sysParam</sql>
+
+    <resultMap id="result" type="com.lazycoder.database.model.SysParam">
+    </resultMap>
+
+    <update id="updateSysParam" parameterType="com.lazycoder.database.model.SysParam">
+        update
+        <include refid="table"/>
+        set
+        paramValue = #{paramValue}
+        where
+        id = #{id}
+    </update>
+
+
+    <select id="getSysParam" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        id = #{id}
+    </select>
+
+</mapper>
+

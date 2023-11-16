@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.lazycoder.database.dao.format.FormatCodeFilelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">formatCodeFile</sql>
+
+    <resultMap id="generalFileFormat"
+               type="com.lazycoder.database.model.GeneralFileFormat">
+    </resultMap>
+
+    <!-- 添加代码文件 -->
+    <insert id="addFormatCodeFile" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        id, moduleId,
+        formatType,
+        additionalSerialNumber,
+        fileName, fileType,
+        codeOrdinal,
+        formatContent,
+        defaultFilenameSetting,
+        codeFormatOrNot,
+        path)
+        values
+        <foreach collection="list" item="fileFormat" index="index"
+                 separator=",">
+            (
+            #{fileFormat.id}, #{fileFormat.moduleId},
+            #{fileFormat.formatType},
+            #{fileFormat.additionalSerialNumber},
+            #{fileFormat.fileName}, #{fileFormat.fileType},
+            #{fileFormat.codeOrdinal},
+            #{fileFormat.formatContent},
+            #{fileFormat.defaultFilenameSetting},
+            #{fileFormat.codeFormatOrNot},
+            #{fileFormat.path}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 删除对应类型的代码格式文件 删除可选模板的代码文件的话，如果没有设置 additionalSerialNumber ，直接删全部-->
+    <delete id="delFormatCodeFile"
+            parameterType="com.lazycoder.database.model.GeneralFileFormat">
+        delete from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        <if test="formatType == 0 and additionalSerialNumber != 0">
+            and (additionalSerialNumber = #{additionalSerialNumber})
+        </if>
+        <if test="formatType == 2">
+            and moduleId = #{moduleId}
+        </if>
+    </delete>
+
+
+    <!-- 更改默认可选模板代码文件 -->
+    <insert id="updateFormatCodeFile"
+            parameterType="com.lazycoder.database.model.GeneralFileFormat">
+        replace into
+        <include refid="table"/>
+        (
+        id,
+        formatType,
+        additionalSerialNumber,
+        fileName, fileType,
+        moduleId,
+        codeOrdinal,
+        formatContent,
+        defaultFilenameSetting,
+        codeFormatOrNot,
+        path)
+        values
+        <foreach collection="list" item="formatFile" index="index"
+                 separator=",">
+            (
+            #{formatFile.id},
+            #{formatFile.formatType},
+            #{formatFile.additionalSerialNumber},
+            #{formatFile.fileName}, #{formatFile.fileType},
+            #{formatFile.moduleId},
+            #{formatFile.codeOrdinal},
+            #{formatFile.formatContent},
+            #{formatFile.defaultFilenameSetting},
+            #{formatFile.codeFormatOrNot},
+            #{formatFile.path}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 删除模块 -->
+    <delete id="delDataOfModule">
+        delete from
+        <include refid="table"/>
+        where
+        formatType = #{formatType} and
+        moduleId = #{moduleId}
+    </delete>
+
+    <select id="getFormatCodeFileList"
+            resultMap="generalFileFormat">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        <if test="formatType == 0 and additionalSerialNumber != 0">
+            and (additionalSerialNumber = #{additionalSerialNumber})
+        </if>
+        <if test="formatType == 2">
+            and moduleId = #{moduleId}
+        </if>
+        <if test="fileType == 1">
+            and fileType = #{fileType}
+        </if>
+        order by codeOrdinal
+    </select>
+
+    <!-- 获取某个模块 -->
+    <select id="getFormatCodeFileById"
+            parameterType="java.lang.String"
+            resultMap="generalFileFormat">
+        select * from
+        <include refid="table"/>
+        where
+        id = #{id}
+    </select>
+
+    <select id="getFormatFileByParam"
+            parameterType="com.lazycoder.database.CodeFormatFlagParam"
+            resultMap="generalFileFormat">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        and fileType = #{fileType}
+        <if test="fileType == 1">
+            and codeOrdinal = #{codeOrdinal}
+        </if>
+        <if test="formatType == 0 and additionalSerialNumber != 0">
+            and (additionalSerialNumber = #{additionalSerialNumber})
+        </if>
+    </select>
+
+    <!-- 根据条件获取对应的代码格式文件的名称 -->
+    <select id="getFormatFileName"
+            parameterType="com.lazycoder.database.CodeFormatFlagParam"
+            resultType="java.lang.String">
+        select fileName from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        and fileType = #{fileType}
+        <if test="fileType == 1">
+            and codeOrdinal = #{codeOrdinal}
+        </if>
+        <if test="formatType == 0 and additionalSerialNumber != 0">
+            and (additionalSerialNumber = #{additionalSerialNumber})
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.OptionDataModelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">optionDataModel</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.OptionDataModel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addOption"
+            parameterType="com.lazycoder.database.model.OptionDataModel">
+        insert into
+        <include refid="table"/>
+        (optionId,
+        moduleId, optionName,
+        optionNameListParam, valueNum,
+        optionValueListParam,valueListGroupNum,
+        usingRange, optionType,
+        leftStr, rightStr, separatorStr,
+        additionalSerialNumber,
+        rowNoteParam
+        )
+        values
+        (
+        #{optionId},
+        #{moduleId}, #{optionName},
+        #{optionNameListParam}, #{valueNum},
+        #{optionValueListParam}, #{valueListGroupNum},
+        #{usingRange},#{optionType},
+        #{leftStr},
+        #{rightStr},#{separatorStr},
+        #{additionalSerialNumber},
+        #{rowNoteParam}
+        )
+    </insert>
+
+    <!-- 查询选项名 -->
+    <select id="getOptionNameList"
+            parameterType="com.lazycoder.database.model.OptionDataModel"
+            resultType="com.lazycoder.database.model.OptionDataModel">
+        select * from
+        <include refid="table"/>
+        where 1=1
+        <if test="usingRange!=null">
+            and usingRange = #{usingRange}
+        </if>
+        <if test="usingRange==0">
+            and additionalSerialNumber = #{additionalSerialNumber}
+        </if>
+        <if test="moduleId!=null and usingRange == 2">
+            and moduleId = #{moduleId}
+        </if>
+    </select>
+
+    <!-- 查询对应模块的选项名 废弃不用 -->
+    <select id="getCorrespondingOptionNameList"
+            parameterType="java.lang.String" resultType="com.lazycoder.database.model.OptionDataModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId} and
+        usingRange = #{usingRange}
+    </select>
+
+    <!-- 更改模块 -->
+    <update id="updateOption"
+            parameterType="com.lazycoder.database.model.OptionDataModel">
+        update
+        <include refid="table"/>
+        set
+        optionNameListParam = #{optionNameListParam},
+        valueNum = #{valueNum},
+        optionValueListParam = #{optionValueListParam},
+        valueListGroupNum = #{valueListGroupNum},
+        usingRange = #{usingRange},
+        optionType = #{optionType},
+        leftStr = #{leftStr},
+        rightStr = #{rightStr},
+        separatorStr = #{separatorStr},
+        rowNoteParam = #{rowNoteParam},
+        additionalSerialNumber = #{additionalSerialNumber}
+        where
+        optionId = #{optionId}
+    </update>
+
+    <select id="getOptionById" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        optionId = #{optionId}
+    </select>
+
+    <!-- 查询选项名为 optionName 的模块 -->
+    <select id="getOption" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        optionName = #{optionName}
+    </select>
+
+    <select id="getValueListGroupNumById"
+            parameterType="java.lang.String" resultType="java.lang.Integer">
+        select valueListGroupNum from
+        <include refid="table"/>
+        where
+        optionId = #{optionId}
+    </select>
+
+    <!-- 查询通用的选项名 -->
+    <select id="getValueListGroupNum"
+            parameterType="java.lang.String" resultType="java.lang.Integer">
+        select valueListGroupNum from
+        <include refid="table"/>
+        where
+        optionId = #{optionId}
+    </select>
+
+    <!-- 删除模块 -->
+    <delete id="delDataOfModule">
+        delete from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId} and
+        usingRange = #{usingRange}
+    </delete>
+
+    <!-- 删除选项 -->
+    <delete id="delOptionById" parameterType="java.lang.String">
+        delete from
+        <include refid="table"/>
+        where
+        optionId = #{optionId}
+    </delete>
+
+    <!-- 删除选项 -->
+    <delete id="delOption" parameterType="java.lang.String">
+        delete from
+        <include refid="table"/>
+        where
+        optionName = #{optionName}
+    </delete>
+
+    <select id="selectExistById" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select 1 from
+        <include refid="table"/>
+        where
+        optionId = #{optionId}
+    </select>
+
+    <!-- 查询有没有添加过该选项 -->
+    <select id="selectExist" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select 1 from
+        <include refid="table"/>
+        where
+        optionName = #{optionName}
+    </select>
+
+</mapper>

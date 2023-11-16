@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.VariableDataMapper">
+
+    <!-- 表名 -->
+    <sql id="table">variableData</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.VariableData">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addVariableList" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        variableProperty,
+        moduleId,
+        additionalSerialNumber,
+        serialNumber,
+        variableName,
+        roleOfVariableName,
+        theAvaliableRange,
+        dataTypeParam,
+        labelTypeParam,
+        dontNeedTheUserToSelect)
+        values
+        <foreach collection="list" item="variableData" index="index"
+                 separator=",">
+            (
+            #{variableData.variableProperty},
+            #{variableData.moduleId},
+            #{variableData.additionalSerialNumber},
+            #{variableData.serialNumber},
+            #{variableData.variableName},
+            #{variableData.roleOfVariableName},
+            #{variableData.theAvaliableRange},
+            #{variableData.dataTypeParam},
+            #{variableData.labelTypeParam},
+            #{variableData.dontNeedTheUserToSelect}
+            )
+        </foreach>
+    </insert>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getVariableDataList" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        variableProperty = #{variableProperty}
+        <if test="variableProperty == 0 and additionalSerialNumber != 0">
+            and additionalSerialNumber = #{additionalSerialNumber}
+        </if>
+        <if test="moduleId!=null and moduleId!=''">
+            and moduleId = #{moduleId}
+        </if>
+        order by serialNumber
+    </select>
+
+
+    <!-- 删除引入代码 -->
+    <delete id="delVariableList">
+        delete from
+        <include refid="table"/>
+        where
+        (
+        variableProperty = #{variableProperty}
+        <if test="variableProperty == 0 and additionalSerialNumber != 0">
+            and additionalSerialNumber = #{additionalSerialNumber}
+        </if>
+        <if test="moduleId!=null and moduleId!=''">
+            and moduleId = #{moduleId}
+        </if>
+        )
+    </delete>
+
+</mapper>

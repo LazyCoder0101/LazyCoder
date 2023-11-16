@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.command.FormatTypeOperatingModelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">formatTypeControl</sql>
+
+    <resultMap id="result" type="com.lazycoder.database.model.command.FormatTypeOperatingModel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addOperatingModel" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (formatType, additionalSerialNumber,
+        typeSerialNumber, typeName,
+        setProperty,
+        showText,
+        ordinal,
+        defaultControlStatementFormat, hiddenControlStatementFormat,
+        hiddenState,
+        numberOfComponents,
+        noteListParam, setProperty,
+        controlComponentCorrespondingInformation)
+        values
+        <foreach collection="list" item="operatingModel" index="index" separator=",">
+            (
+            #{operatingModel.formatType}, #{operatingModel.additionalSerialNumber},
+            #{operatingModel.typeSerialNumber},
+            #{operatingModel.typeName},
+            #{operatingModel.setProperty},
+            #{operatingModel.showText},
+            #{operatingModel.ordinal},
+            #{operatingModel.defaultControlStatementFormat},
+            #{operatingModel.hiddenControlStatementFormat},
+            #{operatingModel.hiddenState},
+            #{operatingModel.numberOfComponents},
+            #{operatingModel.noteListParam}, #{operatingModel.setProperty},
+            #{operatingModel.controlComponentCorrespondingInformation}
+            )
+        </foreach>
+    </insert>
+
+
+    <!-- 删除模块 -->
+    <delete id="delOperatingModel">
+        delete from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+    </delete>
+
+
+    <select id="getOperatingModel"
+            parameterType="com.lazycoder.database.model.featureSelectionModel.FormatTypeFeatureSelectionModel"
+            resultType="com.lazycoder.database.model.command.FormatTypeOperatingModel">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        <if test="formatType == 0 and additionalSerialNumber != 0">
+            and additionalSerialNumber = #{additionalSerialNumber}
+        </if>
+        <if test="typeName != null">
+            and typeName = #{typeName}
+        </if>
+        <if test="typeSerialNumber != 0">
+            and typeSerialNumber = #{typeSerialNumber}
+        </if>
+        <if test="ordinal != 0">
+            and ordinal = #{ordinal}
+        </if>
+    </select>
+
+    <select id="getOperatingModelList"
+            parameterType="com.lazycoder.database.model.featureSelectionModel.FormatTypeFeatureSelectionModel"
+            resultType="com.lazycoder.database.model.command.FormatTypeOperatingModel">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        <if test="formatType == 0 and additionalSerialNumber != 0">
+            and additionalSerialNumber = #{additionalSerialNumber}
+        </if>
+        <if test="typeName != null">
+            and typeName = #{typeName}
+        </if>
+        order by ordinal
+    </select>
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getFeatureList" parameterType="com.lazycoder.database.model.featureSelectionModel.FormatTypeFeatureSelectionModel"
+            resultType="com.lazycoder.database.model.featureSelectionModel.FormatTypeFeatureSelectionModel">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+        <if test="0 == formatType and 0 != additionalSerialNumber">
+            and additionalSerialNumber = #{additionalSerialNumber}
+        </if>
+        <if test="null!=typeName and ''!=typeName and typeSerialNumber==0">
+            and typeName = #{typeName}
+        </if>
+        <if test="0 != typeSerialNumber">
+            and typeSerialNumber = #{typeSerialNumber}
+        </if>
+        order by ordinal
+    </select>
+
+
+</mapper>

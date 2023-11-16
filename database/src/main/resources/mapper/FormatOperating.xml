@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.format.FormatOperatingMapper">
+
+
+    <!-- 表名 -->
+    <sql id="table">formatOperating</sql>
+
+
+    <resultMap id="mainOperating"
+               type="com.lazycoder.database.model.format.MainOperating">
+    </resultMap>
+
+
+    <!-- 添加其他操作 -->
+    <insert id="addFormatOperatingList"
+            parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        formatType,
+        typeName,
+        additionalSerialNumber,
+        defaultControlStatementFormat,
+        numberOfComponents,
+        controlComponentCorrespondingInformation,
+        noteListParam,
+        setProperty)
+        values
+        <foreach collection="list" item="operatingModel" index="index"
+                 separator=",">
+            (
+            #{operatingModel.formatType},
+            #{operatingModel.typeName},
+            #{operatingModel.additionalSerialNumber},
+            #{operatingModel.defaultControlStatementFormat},
+            #{operatingModel.numberOfComponents},
+            #{operatingModel.controlComponentCorrespondingInformation},
+            #{operatingModel.noteListParam},
+            #{operatingModel.setProperty}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 按条件查询其他操作 -->
+    <select id="getAdditionalOperatingList" parameterType="java.util.List"
+            resultType="com.lazycoder.database.model.format.AdditionalOperating">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = 0
+        <if test="setPropertyList!=null">
+            and setProperty in (
+            <foreach collection="setPropertyList" item="temp" index="index"
+                     separator=",">
+                #{temp}
+            </foreach>
+            )
+        </if>
+        order by additionalSerialNumber
+    </select>
+
+
+    <!-- 删除其他操作 -->
+    <delete id="delAllAdditionalOperating">
+        delete from
+        <include refid="table"/>
+        where
+        formatType = #{formatType}
+    </delete>
+
+    <!-- 查询其他操作 -->
+    <select id="getAllOperatingList"
+            resultType="com.lazycoder.database.model.format.AdditionalOperating">
+        select * from
+        <include refid="table"/>
+        where formatType = #{formatType}
+        order by additionalSerialNumber
+    </select>
+
+    <!-- 查询其他操作 -->
+    <select id="getAdditionalOperating"
+            resultType="com.lazycoder.database.model.format.AdditionalOperating">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType} and
+        additionalSerialNumber = #{additionalSerialNumber}
+    </select>
+
+
+    <select id="getAdditionalFeatureSelectionList"
+            resultType="com.lazycoder.database.model.featureSelectionModel.AdditionalFeatureSelection">
+        select additionalSerialNumber, typeName from
+        <include refid="table"/>
+        where formatType = #{formatType}
+        order by additionalSerialNumber
+    </select>
+
+    <update id="updateFormatOperating"
+            parameterType="com.lazycoder.database.model.general.format.GenerlFormatOperatingModel">
+        update
+        <include refid="table"/>
+        set
+        defaultControlStatementFormat = #{formatOperating.defaultControlStatementFormat},
+        numberOfComponents = #{formatOperating.numberOfComponents},
+        noteListParam = #{formatOperating.noteListParam},
+        controlComponentCorrespondingInformation =
+        #{formatOperating.controlComponentCorrespondingInformation}
+        where formatType = #{formatType} and
+        additionalSerialNumber = 1
+    </update>
+
+
+    <select id="getMainOperating" resultMap="mainOperating">
+        select * from
+        <include refid="table"/>
+        where
+        formatType = #{formatType} and
+        additionalSerialNumber = 1
+    </select>
+
+
+
+</mapper>

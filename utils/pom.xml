@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.lazycoder</groupId>
+        <artifactId>lazycoder</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.lazycoder</groupId>
+    <artifactId>utils</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>utils</name>
+    <description>系统使用到的工具</description>
+
+    <dependencies>
+
+        <!--        &lt;!&ndash; fastjson包 &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.alibaba</groupId>-->
+        <!--            <artifactId>fastjson</artifactId>-->
+        <!--            <version>1.2.76</version>-->
+        <!--        </dependency>-->
+
+        <!--编码检测工具 -->
+        <dependency>
+            <groupId>com.googlecode.juniversalchardet</groupId>
+            <artifactId>juniversalchardet</artifactId>
+            <version>1.0.3</version>
+        </dependency>
+
+        <!-- 编码格式判断使用 -->
+        <dependency>
+            <groupId>com.encodingDetect</groupId>  <!-- 库名称，也可以自定义 -->
+            <artifactId>encodingDetect</artifactId>    <!--库名称，也可以自定义 -->
+            <version>1.0</version> <!--版本号 -->
+        </dependency>
+
+        <!-- 编码格式转换使用 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>lazy-coder-base-configuration</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

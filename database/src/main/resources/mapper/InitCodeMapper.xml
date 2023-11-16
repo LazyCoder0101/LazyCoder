@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.command.InitCodeModelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">initCode</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.command.InitCodeModel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addCodeModel" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        moduleId,
+        ordinal, codeOrdinal,
+        whetherTheDefault,
+        codeFormatParam,
+        codeLabelId, codeUsePropertyParam,
+        pathParam )
+        values
+        <foreach collection="list" item="initCodeModel" index="index"
+                 separator=",">
+            (
+            #{initCodeModel.moduleId},
+            #{initCodeModel.ordinal},
+            #{initCodeModel.codeOrdinal},
+            #{initCodeModel.whetherTheDefault},
+            #{initCodeModel.codeFormatParam},
+            #{initCodeModel.codeLabelId},#{initCodeModel.codeUsePropertyParam},
+            #{initCodeModel.pathParam}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更改模块
+    <update id="updateCodeModel" parameterType="com.lazycoder.database.model.command.InitCodeModel">
+        update
+        <include refid="table" />
+        set
+        "codeFormatParam"= #{codeFormatParam},
+        "whetherTheDefault"= #{whetherTheDefault},
+        "pathParam"= #{pathParam}
+        where
+        ( "moduleName"=#{moduleName}and
+        "className"=#{className} and
+        "ordinal" = #{ordinal} and
+        "codeOrdinal" = #{codeOrdinal} )
+    </update>-->
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getCodeModelList" parameterType="java.lang.String"
+            resultType="com.lazycoder.database.model.command.InitCodeModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+        order
+        by ordinal
+    </select>
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getCorrespondingCodeModelList"
+            parameterType="com.lazycoder.database.model.featureSelectionModel.InitFeatureSelectonModel"
+            resultType="com.lazycoder.database.model.command.InitCodeModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+        and ordinal = #{ordinal}
+        order
+        by codeOrdinal
+    </select>
+
+    <select id="getDeafaultCodeModelList"
+            resultType="com.lazycoder.database.model.command.InitCodeModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+        and whetherTheDefault = #{whetherTheDefault}
+        order
+        by codeOrdinal
+    </select>
+
+    <!-- 删除模块 -->
+    <delete id="delCodeModel">
+        delete from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+    </delete>
+
+    <select id="selectExistCodeLabelIdUsed" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="table"/>
+        where codeLabelId = #{codeLabelId}
+    </select>
+
+</mapper>

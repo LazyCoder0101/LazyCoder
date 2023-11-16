@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.lazycoder.database.dao.command.ModuleSetOperatingModelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">moduleSetControl</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.command.ModuleSetOperatingModel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addOperatingModel" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        moduleId,
+        showText,
+        typeSerialNumber,
+        typeName,
+        ordinal,
+        defaultControlStatementFormat, hiddenControlStatementFormat,
+        hiddenState,
+        numberOfComponents,
+        noteListParam,
+        controlComponentCorrespondingInformation,
+        setProperty)
+        values
+        <foreach collection="list" item="moduleSetOperatingModel"
+                 index="index" separator=",">
+            (
+            #{moduleSetOperatingModel.moduleId},
+            #{moduleSetOperatingModel.showText},
+            #{moduleSetOperatingModel.typeSerialNumber},
+            #{moduleSetOperatingModel.typeName},
+            #{moduleSetOperatingModel.ordinal},
+            #{moduleSetOperatingModel.defaultControlStatementFormat},
+            #{moduleSetOperatingModel.hiddenControlStatementFormat},
+            #{moduleSetOperatingModel.hiddenState},
+            #{moduleSetOperatingModel.numberOfComponents},
+            #{moduleSetOperatingModel.noteListParam},
+            #{moduleSetOperatingModel.controlComponentCorrespondingInformation},
+            #{moduleSetOperatingModel.setProperty}
+            )
+        </foreach>
+    </insert>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getOperatingModelList"
+            parameterType="java.lang.String"
+            resultType="com.lazycoder.database.model.command.ModuleSetOperatingModel">
+        select * from
+        <include refid="table"/>
+        where
+        typeName = #{typeName} and
+        moduleId = #{moduleId}
+        order by ordinal
+    </select>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getOperatingModel"
+            parameterType="com.lazycoder.database.model.featureSelectionModel.ModuleSetFeatureSelectionModel"
+            resultType="com.lazycoder.database.model.command.ModuleSetOperatingModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId} and
+        ordinal = #{ordinal}
+        <if test="typeSerialNumber != 0">
+            and typeSerialNumber = #{typeSerialNumber}
+        </if>
+        <if test="null!=typeName and ''!=typeName and typeSerialNumber==0">
+            and typeName = #{typeName}
+        </if>
+    </select>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getFeatureList" parameterType="java.lang.String"
+            resultType="com.lazycoder.database.model.featureSelectionModel.ModuleSetFeatureSelectionModel">
+        select * from
+        <include refid="table"/>
+        where
+        typeName = #{typeName} and
+        moduleId = #{moduleId}
+        order by ordinal
+    </select>
+
+    <!-- 删除模块 -->
+    <delete id="delOperatingModel" parameterType="java.lang.String">
+        delete from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.AttachedFileMapper">
+
+    <!-- 表名 -->
+    <sql id="table">attachedFile</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.AttachedFile">
+    </resultMap>
+
+    <!-- 添加附加文件 -->
+    <insert id="addAttachedFileList" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        moduleId,
+        additionalSerialNumber,
+        attachedFileType,
+        ordinal,
+        path)
+        values
+        <foreach collection="list" item="attachedFile" index="index"
+                 separator=",">
+            (
+            #{attachedFile.moduleId},
+            #{attachedFile.additionalSerialNumber},
+            #{attachedFile.attachedFileType},
+            #{attachedFile.ordinal},
+            #{attachedFile.path}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 获取模块附带文件路径 -->
+    <select id="getModuleAttachedFileList" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType} and
+        moduleId = #{moduleId}
+    </select>
+
+
+    <!-- 获取可选模板附带文件路径 -->
+    <select id="getAdditionalAttachedFileList" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType} and
+        additionalSerialNumber = #{additionalSerialNumber}
+    </select>
+
+
+    <!-- 获取模块附带文件路径 -->
+    <select id="getModuleAttachedFile" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType} and
+        moduleId = #{moduleId} and
+        ordinal = #{ordinal}
+    </select>
+
+
+    <!-- 获取可选模板附带文件路径 -->
+    <select id="getAdditionalAttachedFile" resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType} and
+        additionalSerialNumber = #{additionalSerialNumber}
+        and
+        ordinal = #{ordinal}
+    </select>
+
+
+    <!-- 查询某个可选模板的附带文件数量 -->
+    <select id="getNumberOfAdditional" resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType} and
+        additionalSerialNumber = #{additionalSerialNumber}
+    </select>
+
+
+    <!-- 查询某个模块的附带文件数量 -->
+    <select id="getNumberOfModule" resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType} and
+        moduleId = #{moduleId}
+    </select>
+
+
+    <!-- 删除分类 -->
+    <delete id="delDataOfAdditional">
+        delete from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType}
+        and
+        additionalSerialNumber = #{additionalSerialNumber}
+    </delete>
+
+
+    <!-- 删除分类 -->
+    <delete id="delDataOfModule">
+        delete from
+        <include refid="table"/>
+        where
+        attachedFileType = #{attachedFileType}
+        and moduleId = #{moduleId}
+    </delete>
+
+
+</mapper>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.lazycoder</groupId>
+        <artifactId>lazycoder</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>ui-utils</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>ui-utils</name>
+    <description>系统UI（swing）需要用到的一些UI组件</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!-- 系统通用模块 -->
+        <dependency>
+            <groupId>com.lazycoder</groupId>
+            <artifactId>utils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>com.bootstrap</groupId>-->
+<!--            <artifactId>bootstrap</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
+
+
+        <!-- swing 吐司组件 https://github.com/Huobn/swing-toast -->
+        <dependency>
+            <groupId>com.tech.callback</groupId>
+            <artifactId>swingc</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <!-- Flat Look and Feel -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <!-- rsyntaxtextarea组件 摘自https://github.com/bobbylight/RSyntaxTextArea-->
+        <dependency>
+            <groupId>com.rsyntaxtextarea</groupId>
+            <artifactId>rsyntaxtextarea</artifactId>
+            <version>2.0.7</version> <!--版本号 -->
+        </dependency>
+
+        <!-- https://github.com/hemroy21/AnimatingCardLayout -->
+        <dependency>
+            <groupId>org.javadev</groupId>
+            <artifactId>layout</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
+        <!-- littleluck皮肤包 -->
+<!--        <dependency>-->
+<!--            <groupId>com.littleluck</groupId>-->
+<!--            <artifactId>littleluck</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
+
+        <!-- 配合littleluck使用 -->
+<!--        <dependency>-->
+<!--            <groupId>com.ninepatch</groupId>-->
+<!--            <artifactId>ninepatch</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--        </dependency>-->
+
+        <!-- beautyeye皮肤包 -->
+        <dependency>
+            <groupId>com.beautyeye_lnf</groupId>
+            <artifactId>beautyeye_lnf</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!--一个据说能实现阴影边框的类-->
+        <!-- https://mvnrepository.com/artifact/com.jhlabs/filters -->
+<!--        <dependency>-->
+<!--            <groupId>com.jhlabs</groupId>-->
+<!--            <artifactId>filters</artifactId>-->
+<!--            <version>2.0.235</version>-->
+<!--        </dependency>-->
+
+        <dependency>
+            <groupId>com.zoo</groupId>
+            <artifactId>zoo</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+<!--        &lt;!&ndash; 摘自：https://github.com/renatoathaydes/swing-selectors &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>com.athaydes.automaton</groupId>-->
+<!--            <artifactId>swing-selectors</artifactId>-->
+<!--            <version>1.0.1</version>-->
+<!--        </dependency>-->
+
+        <!-- 以下依赖实现swing查看HTML，调用浏览器功能，目前已不用 -->
+<!--        <dependency>-->
+<!--            <groupId>chrriis.nativeswing</groupId>-->
+<!--            <artifactId>nativeswing</artifactId>-->
+<!--            <version>1.1.0</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>chrriis.nativeswing</groupId>-->
+<!--            <artifactId>DJNativeSwing-SWT</artifactId>-->
+<!--            <version>1.1.0</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>chrriis.nativeswing</groupId>-->
+<!--            <artifactId>MozillaInterfaces</artifactId>-->
+<!--            <version>1.8.1.3</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>chrriis.nativeswing</groupId>-->
+<!--            <artifactId>swt64</artifactId>-->
+<!--            <version>3.7.0</version>-->
+<!--        </dependency>-->
+
+
+
+<!--        <dependency>-->
+<!--            <groupId>com.weblaf</groupId>-->
+<!--            <artifactId>weblaf-ninepatch-editor</artifactId>-->
+<!--            <version>1.2.14</version>-->
+<!--        </dependency>&ndash;&gt;-->
+
+    </dependencies>
+
+
+</project>

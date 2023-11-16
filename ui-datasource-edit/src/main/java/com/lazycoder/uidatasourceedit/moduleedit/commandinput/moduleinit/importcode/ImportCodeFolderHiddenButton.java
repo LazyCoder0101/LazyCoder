@@ -1,0 +1,25 @@
+package com.lazycoder.uidatasourceedit.moduleedit.commandinput.moduleinit.importcode;
+
+import com.lazycoder.uiutils.folder.FoldButton;
+import com.lazycoder.uiutils.folder.FoldButtonUI;
+
+public class ImportCodeFolderHiddenButton extends FoldButton {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7822164353880179167L;
+
+	/**
+	 * 是否隐藏面板
+	 *
+	 * @param expanded
+	 */
+	public ImportCodeFolderHiddenButton(boolean expanded) {
+		super(expanded);
+		// TODO Auto-generated constructor stub
+		setText("引入代码");
+		setUI(new FoldButtonUI());
+	}
+
+}

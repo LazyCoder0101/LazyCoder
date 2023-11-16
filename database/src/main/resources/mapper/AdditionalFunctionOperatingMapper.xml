@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.command.AdditionalFunctionOperatingModelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">additionalFunctionControl</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.command.AdditionalFunctionOperatingModel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addOperatingModel" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (additionalSerialNumber, showText,
+        ordinal,
+        defaultControlStatementFormat, hiddenControlStatementFormat,
+        hiddenState,
+        numberOfComponents,
+        controlComponentCorrespondingInformation, noteListParam,
+        setProperty
+        )
+        values
+        <foreach collection="list"
+                 item="additionalfunctionOperatingModel" index="index" separator=",">
+            (
+            #{additionalfunctionOperatingModel.additionalSerialNumber},
+            #{additionalfunctionOperatingModel.showText},
+            #{additionalfunctionOperatingModel.ordinal},
+            #{additionalfunctionOperatingModel.defaultControlStatementFormat},
+            #{additionalfunctionOperatingModel.hiddenControlStatementFormat},
+            #{additionalfunctionOperatingModel.hiddenState},
+            #{additionalfunctionOperatingModel.numberOfComponents},
+            #{additionalfunctionOperatingModel.controlComponentCorrespondingInformation},
+            #{additionalfunctionOperatingModel.noteListParam},
+            #{additionalfunctionOperatingModel.setProperty}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 删除模块 -->
+    <delete id="delOperatingModel">
+        delete from
+        <include refid="table"/>
+        where
+        additionalSerialNumber = #{additionalSerialNumber}
+    </delete>
+
+    <select id="getOperatingModelList"
+            resultType="com.lazycoder.database.model.command.AdditionalFunctionOperatingModel">
+        select * from
+        <include refid="table"/>
+        where
+        additionalSerialNumber = #{additionalSerialNumber}
+        order by ordinal
+    </select>
+
+    <!-- 查询功能列表 -->
+    <select id="getFeatureList"
+            resultType="com.lazycoder.database.model.featureSelectionModel.AdditionalFunctionFeatureSelectionModel">
+        select * from
+        <include refid="table"/>
+        where
+        additionalSerialNumber = #{additionalSerialNumber}
+        order by ordinal
+    </select>
+
+
+    <select id="getOperatingModel"
+            parameterType="com.lazycoder.database.model.featureSelectionModel.AdditionalFunctionFeatureSelectionModel"
+            resultType="com.lazycoder.database.model.command.AdditionalFunctionOperatingModel">
+        select * from
+        <include refid="table"/>
+        where
+        additionalSerialNumber = #{additionalSerialNumber} and
+        ordinal = #{ordinal}
+    </select>
+
+
+</mapper>

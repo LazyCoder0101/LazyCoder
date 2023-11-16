@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lazycoder.database.dao.ModuleInfoMapper">
+
+    <!-- 表名 -->
+    <sql id="table">moduleInfo</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.ModuleInfo">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addModuleInfo"
+            parameterType="com.lazycoder.database.model.ModuleInfo">
+        insert into
+        <include refid="table"/>
+        (
+        moduleId,
+        className, moduleName,
+        numOfImport, numOfInit,
+        numOfVariable,numOfFunctionName,
+        whetherModuleControlIsRequired,
+        additionalCodeFilesParamsThatNeedToBeUsed,
+        theNumOfAdditionalCodeFilesParamsThatNeedToBeUsed,
+        numOfAddFile, addFileParam,
+        numOfAttachedFile, attachedFileParam,
+        setTheTypeOfSetCodeParam, numOfSetCodeType,
+        functionTheTypeOfSourceCodeParam,
+        numOfFunctionCodeType
+        )
+        values
+        (
+        #{moduleId},
+        #{className}, #{moduleName},
+        #{numOfImport}, #{numOfInit},
+        #{numOfVariable},#{numOfFunctionName},
+        #{whetherModuleControlIsRequired},
+        #{additionalCodeFilesParamsThatNeedToBeUsed},
+        #{theNumOfAdditionalCodeFilesParamsThatNeedToBeUsed},
+        #{numOfAddFile}, #{addFileParam},
+        #{numOfAttachedFile}, #{attachedFileParam},
+        #{setTheTypeOfSetCodeParam}, #{numOfSetCodeType},
+        #{functionTheTypeOfSourceCodeParam},
+        #{numOfFunctionCodeType}
+        )
+    </insert>
+
+    <!-- 更改模块 -->
+    <update id="updateModuleInfo"
+            parameterType="com.lazycoder.database.model.ModuleInfo">
+        update
+        <include refid="table"/>
+        set
+        numOfImport = #{numOfImport},
+        numOfInit = #{numOfInit},
+        numOfVariable = #{numOfVariable},
+        numOfFunctionName = #{numOfFunctionName},
+        whetherModuleControlIsRequired =
+        #{whetherModuleControlIsRequired},
+        additionalCodeFilesParamsThatNeedToBeUsed =
+        #{additionalCodeFilesParamsThatNeedToBeUsed},
+        theNumOfAdditionalCodeFilesParamsThatNeedToBeUsed =
+        #{theNumOfAdditionalCodeFilesParamsThatNeedToBeUsed},
+        numOfAddFile = #{numOfAddFile},
+        addFileParam =
+        #{addFileParam},
+        attachedFileParam = #{attachedFileParam},
+        setTheTypeOfSetCodeParam = #{setTheTypeOfSetCodeParam},
+        numOfSetCodeType = #{numOfSetCodeType},
+        functionTheTypeOfSourceCodeParam =
+        #{functionTheTypeOfSourceCodeParam},
+        numOfFunctionCodeType =
+        #{numOfFunctionCodeType}
+        where
+        className = #{className} and
+        moduleName = #{moduleName}
+    </update>
+
+    <!-- 更改模块 -->
+    <update id="updateNumOfModuleAttachedFile"
+            parameterType="com.lazycoder.database.model.ModuleInfo">
+        update
+        <include refid="table"/>
+        set
+        numOfAttachedFile = #{numOfAttachedFile}
+        where
+        className =
+        #{className} and
+        moduleName = #{moduleName}
+    </update>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getModuleInfo" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        className = #{className} and
+        moduleName = #{moduleName}
+    </select>
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getTheModuleInfo" parameterType="java.lang.String"
+            resultMap="result">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+    </select>
+
+    <!-- 查询有没有某个分类有没有对应的数据 -->
+    <select id="selectExistDataForClassification" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="table"/>
+        where className = #{className}
+    </select>
+
+    <!-- 删除模块 -->
+    <delete id="delDataOfModule" parameterType="java.lang.String">
+        delete from
+        <include refid="table"/>
+        where
+        className = #{className} and
+        moduleName = #{moduleName}
+    </delete>
+
+    <!-- 更改模块 -->
+    <update id="renameModuleName" parameterType="java.lang.String">
+        update
+        <include refid="table"/>
+        set
+        className = #{className},
+        moduleName = #{moduleName}
+        where
+        moduleId = #{moduleId}
+    </update>
+
+    <!-- 重命名分类 -->
+    <update id="renameClassName" parameterType="java.lang.String">
+        update
+        <include refid="table"/>
+        set
+        className = #{newClassName}
+        where
+        className = #{oldClassName}
+    </update>
+
+
+</mapper>

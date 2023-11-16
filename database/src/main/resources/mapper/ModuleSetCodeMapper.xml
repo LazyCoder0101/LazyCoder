@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="com.lazycoder.database.dao.command.ModuleSetCodeModelMapper">
+
+    <!-- 表名 -->
+    <sql id="table">ModuleSetCode</sql>
+
+    <resultMap id="result"
+               type="com.lazycoder.database.model.command.ModuleSetCodeModel">
+    </resultMap>
+
+    <!-- 添加模块 -->
+    <insert id="addCodeModel" parameterType="java.util.List">
+        insert into
+        <include refid="table"/>
+        (
+        moduleId,
+        typeName, typeSerialNumber,
+        ordinal, codeOrdinal,
+        codeFormatParam,
+        codeLabelId, codeUsePropertyParam,
+        pathParam )
+        values
+        <foreach collection="list" item="ModuleSetCodeModel"
+                 index="index" separator=",">
+            (
+            #{ModuleSetCodeModel.moduleId},
+            #{ModuleSetCodeModel.typeName},#{ModuleSetCodeModel.typeSerialNumber},
+            #{ModuleSetCodeModel.ordinal},
+            #{ModuleSetCodeModel.codeOrdinal},
+            #{ModuleSetCodeModel.codeFormatParam},
+            #{ModuleSetCodeModel.codeLabelId},#{ModuleSetCodeModel.codeUsePropertyParam},
+            #{ModuleSetCodeModel.pathParam}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 更改模块 -->
+    <!-- <update id="updateCodeModel" parameterType="com.lannong.Client.db.model.temporary.ModuleSetCodeModel">
+        update <include refid="table" /> set "codeFormatParam"= #{codeFormatParam},
+        "typeName"=#{typeName}, "pathParam"= #{pathParam} where ( "moduleName"=#{moduleName}and
+        "className"=#{className} and "typeName" = #{oldTypeName} and "ordinal" =
+        #{ordinal} and "codeOrdinal" = #{codeOrdinal} ) </update> -->
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getCodeModelList" parameterType="java.lang.String"
+            resultType="com.lazycoder.database.model.command.ModuleSetCodeModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+        and typeName = #{typeName}
+        order
+        by ordinal
+    </select>
+
+
+    <!-- 查询分类名为className的模块 -->
+    <select id="getCorrespondingCodeModelList"
+            parameterType="com.lazycoder.database.model.featureSelectionModel.ModuleSetFeatureSelectionModel"
+            resultType="com.lazycoder.database.model.command.ModuleSetCodeModel">
+        select * from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+        and ordinal = #{ordinal}
+        <if test="typeSerialNumber != 0">
+            and typeSerialNumber = #{typeSerialNumber}
+        </if>
+        <if test="typeName!=null and typeName!=''">
+            and typeName = #{typeName}
+        </if>
+        order
+        by codeOrdinal
+    </select>
+
+
+    <!-- 删除模块 -->
+    <delete id="delCodeModel">
+        delete from
+        <include refid="table"/>
+        where
+        moduleId = #{moduleId}
+    </delete>
+
+    <select id="selectExistCodeLabelIdUsed" parameterType="java.lang.String"
+            resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="table"/>
+        where codeLabelId = #{codeLabelId}
+    </select>
+
+</mapper>
