@@ -153,6 +153,11 @@
 
 
 ### ☎️ 联系作者
+项目开源地址
+[github](https://github.com/LazyCoder0101/LazyCoder)
+&emsp;
+[gitee](https://gitee.com/lazy-coder/LazyCoder)
+&emsp; &emsp;
 - 如果您对懒农这个应用，想要反馈 Bug、提供产品意见，甚至进行迭代优化，欢迎联系作者，或者加群讨论。
 
 <table>
