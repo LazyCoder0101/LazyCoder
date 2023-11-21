@@ -109,6 +109,9 @@
 
 ![](docMedia/操作说明/生成程序1.png)
 
+选择所需模块，然后点击确定
+![](docMedia/操作说明/生成程序2.png)
+
 稍微等待一会，进入代码生成界面，鼠标放在左上角中已选择的模块，可以添加对应模块的功能到当前橙色的面板上，中间为可视化控制面板，通过里面文字和组件结合，按提示操作对代码进行调整，其中里面有个带有蓝色的“…”图形的按钮，点击可以展开对应的面板，并使得该面板为橙色。
 
 ![](docMedia/操作说明/生成程序3.png)
@@ -162,9 +165,9 @@
 
 <table>
 <tr>
-<td align="center"><img src="docMedia\联系作者\qq.jpg" width="240px;"/><br /><sub><b>作者qq</b></sub></a>
-<td align="center"><img src="docMedia\联系作者\微信.jpg" width="240px;"/><br /><sub><b>作者微信</b></sub></a>
-<td align="center"><img src="docMedia\联系作者\qq群.jpg" width="240px;"/><br /><sub><b>qq群：893613856</b></sub></a>
+<td align="center"><img src="docMedia\联系作者\qq.jpg" width="240px;"/><br /><sub><b>作者qq：3606515004</b></sub></a>
+<td align="center"><img src="docMedia\联系作者\微信.jpg" width="240px;"/><br /><sub><b>作者微信：lanzai2020</b></sub></a>
+<td align="center"><img src="docMedia\联系作者\qq群.jpg" width="240px;"/><br /><sub><b>qq交流群：893613856</b></sub></a>
 </tr>
 </table>
 
