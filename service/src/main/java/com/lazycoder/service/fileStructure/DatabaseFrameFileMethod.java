@@ -364,4 +364,40 @@ public class DatabaseFrameFileMethod {
     }
 
 
+    /**
+     * 在测试预览显示文件夹路径path生成项目对应的文件夹
+     *
+     * @param path         生成路径
+     * @param proName 项目名
+     */
+    public static void generateProFileInPreviewTestShowPath(String path, String proName) {
+        File file = new File(path + File.separator + proName);
+        file.mkdirs();
+        SourceGenerateFileMethod.setLannongProIcon(file);
+        File identifyFile = DatabaseFileStructure.getPreviewTestProFileIdentifyFile(file);
+        FileUtil.writeFile(identifyFile, DatabaseFileStructure.PREVIEW_TEST_PRO_FILE_IDENTIFY_SECRET_KEY);
+        FileUtil.setFileHidden(identifyFile);
+    }
+
+    /**
+     * 检测 预览测试 里面的文件夹是否为生成代码的测试文件
+     *
+     * @return
+     */
+    public static boolean isProFileInPreviewTestProFile(File folder) {
+        boolean flag = false;
+        if (folder.isDirectory()) {
+            File file = new File(
+                    folder.getAbsolutePath() + File.separator + DatabaseFileStructure.PREVIEW_TEST_PRO_IDENTIFY_FILE_NAME);
+            if (file.exists()) {
+                String content = FileUtil.getFileContent(file.getAbsolutePath());
+                if (DatabaseFileStructure.PREVIEW_TEST_PRO_FILE_IDENTIFY_SECRET_KEY
+                        .equals(content)) {
+                    flag = true;
+                }
+            }
+        }
+        return flag;
+    }
+
 }

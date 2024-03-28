@@ -3,6 +3,7 @@ package com.lazycoder.uicodegeneration.component.operation.component.typeset.mod
 import com.lazycoder.database.common.MarkElementName;
 import com.lazycoder.database.model.ModuleInfo;
 import com.lazycoder.database.model.formodule.ModuleInfoStaticMethod;
+import com.lazycoder.uicodegeneration.component.operation.OperatingPaneBusinessTraverse;
 import com.lazycoder.uicodegeneration.component.operation.container.ModuleControlContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.ModuleTypeOperatingContainerParam;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  *
  * @author admin
  */
-public class SettingContainer extends AbstractCodeControlPane {
+public class SettingContainer extends AbstractCodeControlPane implements OperatingPaneBusinessTraverse {
 
     /**
      *
@@ -84,7 +85,7 @@ public class SettingContainer extends AbstractCodeControlPane {
                     moduleTypeContainerParamTemp.setModuleInfo(moduleTypeContainerParam.getModuleInfo());
                     moduleTypeContainerParamTemp.setFormatControlPane(moduleTypeContainerParam.getFormatControlPane());
                     moduleTypeContainerParamTemp.setModuleSetType(moduleTypeContainerModel.getModuleSetType());
-                    moduleTypeContainerParamTemp.setSetButton(this.moduleTypeContainerParam.getSetButton());
+                    //moduleTypeContainerParamTemp.setSetButton(this.moduleTypeContainerParam.getSetButton());
 
                     moduleTypeContainer = new ModuleTypeContainer(moduleTypeContainerModel,
                             moduleTypeContainerParamTemp, false);
@@ -115,7 +116,7 @@ public class SettingContainer extends AbstractCodeControlPane {
                         moduleTypeContainerParamTemp
                                 .setFormatControlPane(moduleTypeContainerParam.getFormatControlPane());
                         moduleTypeContainerParamTemp.setModuleSetType(typeList.get(i));
-                        moduleTypeContainerParamTemp.setSetButton(this.moduleTypeContainerParam.getSetButton());
+                        //moduleTypeContainerParamTemp.setSetButton(this.moduleTypeContainerParam.getSetButton());
 
                         moduleTypeContainer = new ModuleTypeContainer(moduleTypeContainerParamTemp, false);
                         addContainer(moduleTypeContainer);
@@ -243,4 +244,34 @@ public class SettingContainer extends AbstractCodeControlPane {
         }
     }
 
+    @Override
+    public void functionNameSynchronousChange(int functionNameId) {
+        if (ModuleInfo.TRUE_ == moduleInfo.getWhetherModuleControlIsRequired()) {// 添加模块控制窗口
+            moduleControlContainer.functionNameSynchronousChange(functionNameId);
+        }
+        if (moduleInfo.getNumOfSetCodeType() > 0) {
+            ModuleTypeContainer moduleTypeContainer = null;
+            for (int i = 0; i < getComponentCount(); i++) {
+                if (getComponent(i) instanceof ModuleTypeContainer) {
+                    moduleTypeContainer = (ModuleTypeContainer) getComponent(i);
+                    moduleTypeContainer.functionNameSynchronousChange(functionNameId);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void functionNameSynchronousDelete(int functionNameId) {
+
+    }
+
+    @Override
+    public void variableSynchronousChange(int variableId) {
+
+    }
+
+    @Override
+    public void variableSynchronousDelete(int variableId) {
+
+    }
 }

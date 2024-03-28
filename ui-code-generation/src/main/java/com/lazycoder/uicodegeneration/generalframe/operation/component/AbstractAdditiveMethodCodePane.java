@@ -14,9 +14,9 @@ import com.lazycoder.uicodegeneration.component.operation.container.sendparam.Ad
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FunctionOperatingContainerParam;
 import com.lazycoder.uicodegeneration.generalframe.operation.AbstractFormatControlPane;
 import com.lazycoder.uicodegeneration.generalframe.operation.CurrentAddOperaitonEffect;
-import java.awt.Color;
-import java.awt.Graphics;
 import lombok.Getter;
+
+import java.awt.*;
 
 /**
  * 可添加方法的代码面板 给业务逻辑面板和功能拓展组件的对应代码面板继承，左边模块列表的方法就是添加在这面板上
@@ -173,17 +173,10 @@ public abstract class AbstractAdditiveMethodCodePane extends AbstractCodeControl
         }
         if (getParentScrollPane() != null) {
             getParentScrollPane().getViewport().setBackground(theColor);
-//			if (currentSelected == true) {
-//				//CrystalEffect.createCrystalEffect(g, theColor, getParentScrollPane());
-//                //getParentScrollPane().setBackground(theColor);
-//			}
         }
-
         super.paintChildren(g);
-//		if (getParent() != null) {
-//			getParent().repaint();
-//		}
     }
+
 
     /**
      * 获取本模板对应功能添加的相关属性（没有设置标签id）

@@ -8,11 +8,12 @@ import com.lazycoder.database.model.GeneralFileFormat;
 import com.lazycoder.database.model.featureSelectionModel.AdditionalFeatureSelection;
 import com.lazycoder.database.model.format.AdditionalOperating;
 import com.lazycoder.service.vo.meta.AdditionalMetaModel;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -57,6 +58,15 @@ public class AdditionalFormatFileServiceImpl {
      */
     public List<AdditionalFeatureSelection> getAdditionalFeatureSelectionList() {
         return operatingMapper.getAdditionalFeatureSelectionList(DataFormatType.ADDITIONAL_TYPE);
+    }
+
+    public int getAdditionalFeatureSelectionNum() {
+        int anum = 0;//默认没写其他格式的函数
+        Integer anum_temp = operatingMapper.getAdditionalFeatureSelectionNum(DataFormatType.ADDITIONAL_TYPE);
+        if (anum_temp != null) {
+            anum = anum_temp;
+        }
+        return anum;
     }
 
     public void saveFormatCodeFileList(List<GeneralFileFormat> codeFormatList) {
@@ -137,6 +147,7 @@ public class AdditionalFormatFileServiceImpl {
 
     /**
      * 获取对应的可选模板格式的默认代码文件的文件名
+     *
      * @param additionalSerialNumber
      * @return
      */
@@ -163,6 +174,7 @@ public class AdditionalFormatFileServiceImpl {
 
     /**
      * 按条件查找可选模板的操作数据
+     *
      * @param setPropertyList
      * @return
      */

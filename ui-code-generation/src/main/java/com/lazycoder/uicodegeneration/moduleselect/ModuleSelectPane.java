@@ -6,41 +6,28 @@ import com.lazycoder.database.model.Module;
 import com.lazycoder.database.model.formodule.UsingObject;
 import com.lazycoder.service.GeneralHolder;
 import com.lazycoder.service.fileStructure.DatabaseFileStructure;
+import com.lazycoder.service.fileStructure.DatabaseFrameFileMethod;
 import com.lazycoder.service.fileStructure.SysFileStructure;
 import com.lazycoder.service.service.SysService;
 import com.lazycoder.uicodegeneration.component.CodeFormatServiceHolder;
-import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.dbselectframe.DataSourceSelectFrame;
 import com.lazycoder.uicodegeneration.generalframe.CodeGenerationFrame;
-import com.lazycoder.uicodegeneration.generalframe.SelectedModuleParam;
 import com.lazycoder.uiutils.component.animatedcarousel.net.codemap.carousel.helpcarousel.OperatingTipButton;
 import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.uiutils.htmlstyte.HtmlPar;
-import com.lazycoder.uiutils.mycomponent.LazyCoderCommonDialog;
 import com.lazycoder.uiutils.mycomponent.LazyCoderCommonFrame;
 import com.lazycoder.uiutils.mycomponent.MyButton;
 import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.FileUtil;
 import com.lazycoder.utils.StringUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 
 
 public class ModuleSelectPane extends JPanel {
@@ -50,8 +37,8 @@ public class ModuleSelectPane extends JPanel {
      */
     private static final long serialVersionUID = -1594190417162650510L;
 
-    //						创建代码生成界面状态		添加模块状态
-    private final boolean createFrameState = true, addModuleState = false;
+    //						创建代码生成界面状态		    添加模块状态
+    private final boolean createFrameState = true;//    addModuleState = false;
 
     private boolean state = createFrameState;
 
@@ -139,7 +126,7 @@ public class ModuleSelectPane extends JPanel {
         operatingTip = new OperatingTipButton(SysFileStructure.getOperatingTipImageFolder(
                         "生成程序" + File.separator + "模块选择界面")
                 .getAbsolutePath());
-        operatingTip.setLocation(paneFileNameLabel.getX()+10, exLabel.getY() + 3+50);
+        operatingTip.setLocation(paneFileNameLabel.getX() + 10, exLabel.getY() + 3 + 50);
         add(operatingTip);
 
         okbt = new MyButton("确定");
@@ -210,7 +197,7 @@ public class ModuleSelectPane extends JPanel {
                         String projectParentPath = contentPane.putPathTextField.getText().trim(),
                                 projectName = contentPane.proNameTextField.getText().trim(),
                                 mainFileName = contentPane.mainFileNameTextField.getText().trim() + contentPane.exLabel.getText();
-                        new CodeGenerationFrame(projectParentPath, projectName, moduleRelatedParaList, mainFileName);
+                        new CodeGenerationFrame(projectParentPath, projectName, moduleRelatedParaList, mainFileName, CodeGenerationFrame.USER_CODE_GENERATETION_FRAME);
                         frame.dispose();
                     }
                 } else if (e.getSource() == contentPane.cancelBt) {
@@ -230,74 +217,149 @@ public class ModuleSelectPane extends JPanel {
     }
 
     /**
-     * 再选择模块时出现的窗口
+     * 预览测试功能：代码生成界面之前选择模块的窗口
      *
-     * @param selectedModuleParam
+     * @param proName
      */
-    public static JDialog ModuleSelectFrame(SelectedModuleParam selectedModuleParam) {
-        LazyCoderCommonDialog dialog = new LazyCoderCommonDialog();
-        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        Dimension dimension = SysUtil.SCREEN_SIZE;
-        dialog.setBounds(dimension.width / 2 - 450, dimension.height / 2 - 350, 900, 600);
-
+    public static JFrame PreviewTestProModuleSelectFrame(String proName, String previewTestShowPath) {
+        LazyCoderCommonFrame frame = new LazyCoderCommonFrame();
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         ModuleSelectPane contentPane = new ModuleSelectPane();
-        dialog.setContentPane(contentPane);
-        dialog.setTitle("添加模块：" + selectedModuleParam.getCorrespondingPaneFileName());
-        contentPane.moduleSelectListPane.setUsingObject(selectedModuleParam.getUsingObject());
+        frame.setContentPane(contentPane);
+        contentPane.cancelBt.setEnabled(false);
+        frame.setTitle("预览测试");
+        Dimension dimension = SysUtil.SCREEN_SIZE;
+        frame.setBounds(dimension.width / 2 - 450, dimension.height / 2 - 350, 900, 600);
 
-        contentPane.state = contentPane.addModuleState;
-        //       contentPane.paneFileNameLabel.setText("必填模板文件名：");
+        contentPane.moduleSelectListPane.setUsingObject(UsingObject.MAIN_USING_OBJECT);
+        contentPane.state = contentPane.createFrameState;
 
-        contentPane.proNameTextField.setText(selectedModuleParam.getProjectName());
-        contentPane.putPathTextField.setText(selectedModuleParam.getProjectParentPath());
+        contentPane.proNameTextField.setText(proName);
+        contentPane.putPathTextField.setText(SysFileStructure.getPreviewTestProFolder().getAbsolutePath());
+        contentPane.putPathTextField.setEnabled(false);
 
         contentPane.dataSourceLabel.setText(GeneralHolder.currentUserDataSourceLabel.getDataSourceName());
-        contentPane.moduleSelectListPane.showModuleList(selectedModuleParam.getUsingObject(), selectedModuleParam.getModuleRelatedParamList(), ModuleSelectListPane.RESELECT);
+        contentPane.moduleSelectListPane.showModuleList(UsingObject.MAIN_USING_OBJECT, null, ModuleSelectListPane.FIRST_SELECTION);
 
-        contentPane.mainFileNameTextField.setEditable(false);
-        String fileNameNoEx = FileUtil.getFileNameNoEx(selectedModuleParam.getCorrespondingPaneFileName().trim()), ex = FileUtil.getFileEx(selectedModuleParam.getCorrespondingPaneFileName().trim());
-        contentPane.mainFileNameTextField.setText(fileNameNoEx);
-        contentPane.exLabel.setText(ex);
-
-        dialog.addWindowListener(new WindowAdapter() {
+        GeneralFileFormat defaultCodeFormat = SysService.MAIN_FORMAT_CODE_FILE_SERVICE
+                .getMainDefaultFormatFile();// 获取默认主格式代码文件
+        if (defaultCodeFormat != null) {
+            contentPane.mainFileNameTextField.setText(FileUtil.getFileNameNoEx(defaultCodeFormat.getFileName()));
+            contentPane.exLabel.setText(FileUtil.getFileEx(defaultCodeFormat.getFileName()));
+        }
+        frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                dialog.dispose();
+                GeneralHolder.previewTesting = false;
+                frame.dispose();
             }
         });
-        ActionListener addModuleListener = new ActionListener() {
+        ActionListener createFrameListener = new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 if (e.getSource() == contentPane.okbt) {
-                    if (CodeGenerationFrameHolder.currentFormatControlPane != null) {
-                        if (contentPane.check() == true) {
-                            CodeGenerationFrameHolder.temporaryErrorList.clear();//先把临时错误列表清空
+                    if (contentPane.check() == true) {
 
-                            ArrayList<Module> list = contentPane.moduleSelectListPane.getSelectedModuleList();// 获取选中的所有模块
-                            ArrayList<Module> sortList = SysService.MODULE_SERVICE.sortModuleListByNeedModuleParam(list);
+                        ArrayList<Module> list = contentPane.moduleSelectListPane.getSelectedModuleList();// 获取选中的所有模块
+                        ArrayList<Module> sortList = SysService.MODULE_SERVICE.sortModuleListByNeedModuleParam(list);
+                        ArrayList<ModuleRelatedParam> moduleRelatedParaList = SysService.MODULE_SERVICE.getCurrentModuleInfoListBy(sortList);// 根据模块列表拿到所有模块的模块信息
 
-                            ArrayList<ModuleRelatedParam> moduleRelatedParaList = SysService.MODULE_SERVICE.getCurrentModuleInfoListBy(sortList);// 根据模块列表拿到所有模块的模块信息
-                            CodeGenerationFrameHolder.currentFormatControlPane.addInit(moduleRelatedParaList);
+                        String projectParentPath = contentPane.putPathTextField.getText().trim(),
+                                projectName = contentPane.proNameTextField.getText().trim(),
+                                mainFileName = contentPane.mainFileNameTextField.getText().trim() + contentPane.exLabel.getText();
 
-                            CodeGenerationFrameHolder.currentFormatControlPane.setNoUserSelectionIsRequiredValue();
+                        DatabaseFrameFileMethod.generateProFileInPreviewTestShowPath(previewTestShowPath,
+                                projectName);
 
-                            dialog.dispose();
-                            CodeGenerationFrameHolder.showErrorListIfNeed("这个功能有点异常喔   (=ω=；)");
-                        }
+                        new CodeGenerationFrame(projectParentPath, projectName, moduleRelatedParaList, mainFileName, CodeGenerationFrame.PREVIEW_TEST_PROJECT_FRAME);
+                        frame.dispose();
                     }
                 } else if (e.getSource() == contentPane.cancelBt) {
-                    dialog.dispose();
+                    new DataSourceSelectFrame(contentPane.proNameTextField.getText(), contentPane.putPathTextField.getText());
+                    frame.dispose();
                 }
             }
         };
-        contentPane.okbt.addActionListener(addModuleListener);
-        contentPane.cancelBt.addActionListener(addModuleListener);
+        contentPane.okbt.addActionListener(createFrameListener);
+        contentPane.cancelBt.addActionListener(createFrameListener);
 
-        dialog.setVisible(true);
-        return dialog;
+
+        frame.setVisible(true);
+        new CodeFormatServiceHolder();//先初始化代码格式化服务
+        return frame;
     }
+
+    /**
+     * 再选择模块时出现的窗口（再改版已不用这功能）
+     *
+     * @param selectedModuleParam
+     */
+//    public static JDialog ModuleSelectFrame(SelectedModuleParam selectedModuleParam) {
+//        LazyCoderCommonDialog dialog = new LazyCoderCommonDialog();
+//        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//        Dimension dimension = SysUtil.SCREEN_SIZE;
+//        dialog.setBounds(dimension.width / 2 - 450, dimension.height / 2 - 350, 900, 600);
+//
+//        ModuleSelectPane contentPane = new ModuleSelectPane();
+//        dialog.setContentPane(contentPane);
+//        dialog.setTitle("添加模块：" + selectedModuleParam.getCorrespondingPaneFileName());
+//        contentPane.moduleSelectListPane.setUsingObject(selectedModuleParam.getUsingObject());
+//
+//        contentPane.state = contentPane.addModuleState;
+//        //       contentPane.paneFileNameLabel.setText("必填模板文件名：");
+//
+//        contentPane.proNameTextField.setText(selectedModuleParam.getProjectName());
+//        contentPane.putPathTextField.setText(selectedModuleParam.getProjectParentPath());
+//
+//        contentPane.dataSourceLabel.setText(GeneralHolder.currentUserDataSourceLabel.getDataSourceName());
+//        contentPane.moduleSelectListPane.showModuleList(selectedModuleParam.getUsingObject(), selectedModuleParam.getModuleRelatedParamList(), ModuleSelectListPane.RESELECT);
+//
+//        contentPane.mainFileNameTextField.setEditable(false);
+//        String fileNameNoEx = FileUtil.getFileNameNoEx(selectedModuleParam.getCorrespondingPaneFileName().trim()), ex = FileUtil.getFileEx(selectedModuleParam.getCorrespondingPaneFileName().trim());
+//        contentPane.mainFileNameTextField.setText(fileNameNoEx);
+//        contentPane.exLabel.setText(ex);
+//
+//        dialog.addWindowListener(new WindowAdapter() {
+//            @Override
+//            public void windowClosing(WindowEvent e) {
+//                dialog.dispose();
+//            }
+//        });
+//        ActionListener addModuleListener = new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                // TODO Auto-generated method stub
+//                if (e.getSource() == contentPane.okbt) {
+//                    if (CodeGenerationFrameHolder.currentFormatControlPane != null) {
+//                        if (contentPane.check() == true) {
+//                            CodeGenerationFrameHolder.temporaryErrorList.clear();//先把临时错误列表清空
+//
+//                            ArrayList<Module> list = contentPane.moduleSelectListPane.getSelectedModuleList();// 获取选中的所有模块
+//                            ArrayList<Module> sortList = SysService.MODULE_SERVICE.sortModuleListByNeedModuleParam(list);
+//
+//                            ArrayList<ModuleRelatedParam> moduleRelatedParaList = SysService.MODULE_SERVICE.getCurrentModuleInfoListBy(sortList);// 根据模块列表拿到所有模块的模块信息
+//                            CodeGenerationFrameHolder.currentFormatControlPane.addInit(moduleRelatedParaList);
+//
+//                            CodeGenerationFrameHolder.currentFormatControlPane.setNoUserSelectionIsRequiredValue();
+//
+//                            dialog.dispose();
+//                            CodeGenerationFrameHolder.showErrorListIfNeed("这个功能有点异常喔   (=ω=；)");
+//                        }
+//                    }
+//                } else if (e.getSource() == contentPane.cancelBt) {
+//                    dialog.dispose();
+//                }
+//            }
+//        };
+//        contentPane.okbt.addActionListener(addModuleListener);
+//        contentPane.cancelBt.addActionListener(addModuleListener);
+//
+//        dialog.setVisible(true);
+//        return dialog;
+//    }
 
 
     private MouseAdapter mouseAdapter = new MouseAdapter() {

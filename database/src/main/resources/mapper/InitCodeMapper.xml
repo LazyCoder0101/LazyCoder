@@ -19,7 +19,7 @@
         whetherTheDefault,
         codeFormatParam,
         codeLabelId, codeUsePropertyParam,
-        pathParam )
+        pathParam , importCodeParam)
         values
         <foreach collection="list" item="initCodeModel" index="index"
                  separator=",">
@@ -30,7 +30,7 @@
             #{initCodeModel.whetherTheDefault},
             #{initCodeModel.codeFormatParam},
             #{initCodeModel.codeLabelId},#{initCodeModel.codeUsePropertyParam},
-            #{initCodeModel.pathParam}
+            #{initCodeModel.pathParam},#{initCodeModel.importCodeParam}
             )
         </foreach>
     </insert>

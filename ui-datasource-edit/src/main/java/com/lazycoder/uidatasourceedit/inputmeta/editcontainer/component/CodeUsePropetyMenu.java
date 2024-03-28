@@ -6,11 +6,12 @@ import com.lazycoder.lazycodercommon.vo.CodeUseProperty.NoNeedInserNewLine;
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.modulecodeusepropetycomponent.CodeUsePropetyMenuItem;
 import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.utils.JsonUtil;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import javax.swing.JMenu;
-import org.apache.commons.lang3.StringUtils;
 
 public class CodeUsePropetyMenu extends JMenu {
 

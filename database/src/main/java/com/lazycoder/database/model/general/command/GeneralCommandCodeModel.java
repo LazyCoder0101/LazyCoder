@@ -9,9 +9,10 @@ import com.lazycoder.lazycodercommon.vo.CodeUseProperty.NeedUseModuleImportCode;
 import com.lazycoder.lazycodercommon.vo.CodeUseProperty.NoNeedInserNewLine;
 import com.lazycoder.lazycodercommon.vo.CodeUseProperty.NoNeedToInsertImportCode;
 import com.lazycoder.utils.JsonUtil;
-import java.util.ArrayList;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
 
 /**
  * 功能代码储存模型类
@@ -25,6 +26,8 @@ public class GeneralCommandCodeModel extends GeneralCodeModel {
     private String codeLabelId = null;
 
     private String codeUsePropertyParam = "[]";
+
+    private String importCodeParam = "[]";
 
     /**
      * 根据参数转成对应属性

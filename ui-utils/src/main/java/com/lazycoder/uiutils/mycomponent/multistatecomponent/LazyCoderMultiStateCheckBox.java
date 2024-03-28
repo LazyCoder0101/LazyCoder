@@ -17,6 +17,38 @@ public class LazyCoderMultiStateCheckBox extends MultiStateCheckBox implements L
         setCurrentState(MARK_PRE_SELECTED);
     }
 
+
+    public static void setState(LazyCoderMultiStateCheckBox srcLazyCoderMultiStateCheckBox,LazyCoderMultiStateCheckBox toLazyCoderMultiStateCheckBox){
+        toLazyCoderMultiStateCheckBox.setCurrentState(toLazyCoderMultiStateCheckBox.getCurrentState());
+        if (srcLazyCoderMultiStateCheckBox.isParasiticModule()){
+            toLazyCoderMultiStateCheckBox.setParasiticModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_PRE_SELECTED]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isConflictModule()){
+            toLazyCoderMultiStateCheckBox.setConflictModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_PRE_NULL]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isPreUseModule()){
+            toLazyCoderMultiStateCheckBox.setPreUseModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_SELECTED]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isCannotUseModule()){
+            toLazyCoderMultiStateCheckBox.setCannotUseModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_NO]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isAlsoUseModule()){
+            toLazyCoderMultiStateCheckBox.setAlsoUseModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_PRE_SELECTED]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isPreFirUseModule()){
+            toLazyCoderMultiStateCheckBox.setPreFirUseModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_SELECTED]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isPreCannotUseModule()){
+            toLazyCoderMultiStateCheckBox.setPreCannotUseModule(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_NO]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isModuleSelectedNull()){
+            toLazyCoderMultiStateCheckBox.setModuleSelectedNull(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_NULL]);
+        }
+        if (srcLazyCoderMultiStateCheckBox.isCannotChooseManual()){
+            toLazyCoderMultiStateCheckBox.setCannotChooseManual(srcLazyCoderMultiStateCheckBox.getDisenableTips()[MARK_NULL]);
+        }
+    }
+
     @Override
     public boolean isParasiticModule() {
         boolean flag = false;
@@ -76,6 +108,7 @@ public class LazyCoderMultiStateCheckBox extends MultiStateCheckBox implements L
         }
         return flag;
     }
+
 
     @Override
     public void setAlsoUseModule(String tipText) {
@@ -178,6 +211,8 @@ public class LazyCoderMultiStateCheckBox extends MultiStateCheckBox implements L
         }
         return flag;
     }
+
+
 
 
 }

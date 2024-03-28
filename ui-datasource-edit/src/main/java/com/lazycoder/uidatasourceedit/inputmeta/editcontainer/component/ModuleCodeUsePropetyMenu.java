@@ -8,8 +8,10 @@ import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.moduleco
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.modulecodeusepropetycomponent.NeedUseModuleImportCodeMenu;
 import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.utils.JsonUtil;
-import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 public class ModuleCodeUsePropetyMenu extends CodeUsePropetyMenu {
 
@@ -34,6 +36,15 @@ public class ModuleCodeUsePropetyMenu extends CodeUsePropetyMenu {
 //                doClick();
 //            }
 //        });
+
+        JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem("sd");
+        add(menuItem);
+
+        //生成对应的查看引入代码的菜单项
+        JMenuItem importCodeMenuItem = generateImportCodeMenuItem();
+        if (importCodeMenuItem != null) {
+            add(importCodeMenuItem);
+        }
     }
 
     /**
@@ -115,7 +126,7 @@ public class ModuleCodeUsePropetyMenu extends CodeUsePropetyMenu {
                 needUseModuleImportCodeMenu.removeAll();
                 needUseModuleImportCodeMenu.setEnabled(false);
             }
-        }else if (codeUsePropetyDictionaryValue == AbstractCodeUseProperty.NoNeedInserNewLine) {
+        } else if (codeUsePropetyDictionaryValue == AbstractCodeUseProperty.NoNeedInserNewLine) {
             //无需换行
             noNeedInserNewLineMenuItem.setEnabled(flag);
         }
@@ -156,6 +167,14 @@ public class ModuleCodeUsePropetyMenu extends CodeUsePropetyMenu {
             codeUsePropertyArrayList.add(needUseModuleImportCodeMenu.getNeedUseModuleImportCode());
         }
         return JsonUtil.getJsonStr(codeUsePropertyArrayList);
+    }
+
+    /**
+     * 生成查看代码 对应的引入代码 的菜单项的方法（如果为 null，则不生成该菜单）
+     * @return
+     */
+    public JMenuItem generateImportCodeMenuItem(){
+        return null;
     }
 
 }

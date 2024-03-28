@@ -4,10 +4,16 @@ package com.lazycoder.service;
 import com.lazycoder.lazycodercommon.vo.DataSourceLabel;
 import com.lazycoder.service.service.SysService;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
+
+import javax.swing.*;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class GeneralHolder {
+
+	/**
+	 * 是否正在执行预览测试操作
+	 */
+	public static boolean previewTesting = false;
 
 	//临时错误信息记录
 	public static ArrayList<String> temporaryErrorList = new ArrayList<>();

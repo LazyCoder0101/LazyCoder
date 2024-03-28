@@ -6,23 +6,16 @@ import com.lazycoder.service.service.SysService;
 import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.generalframe.operation.AbstractFormatControlPane;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Window;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import org.apache.commons.lang3.StringUtils;
 
 public class FeatureSelectedPane extends JPanel {
 
@@ -38,12 +31,15 @@ public class FeatureSelectedPane extends JPanel {
     private JMenuItem del;
     private Box vBox;
 
-    private AbstractFormatControlPane formatControlPane;
+    private FeatureSelectedTabPane featureSelectedTabPane;
+
+//    private AbstractFormatControlPane formatControlPane;
 
     /**
      * Create the panel.
      */
-    public FeatureSelectedPane() {
+    public FeatureSelectedPane(FeatureSelectedTabPane featureSelectedTabPane) {
+        this.featureSelectedTabPane = featureSelectedTabPane;
         FlowLayout fl = new FlowLayout();
         fl.setAlignment(FlowLayout.LEFT);
         this.setLayout(fl);
@@ -57,12 +53,16 @@ public class FeatureSelectedPane extends JPanel {
         this.setVisible(true);
     }
 
+    public void clearContent(){
+        vBox.removeAll();
+    }
+
     /**
      * 添加模块
      *
      * @param list
      */
-    private void addModuleList(ArrayList<ModuleRelatedParam> list) {
+    public void addModuleList(ArrayList<ModuleRelatedParam> list) {
         FeatureSelectionLabel featureSelectionLabels[] = new FeatureSelectionLabel[list.size()];
         for (int i = 0; i < featureSelectionLabels.length; i++) {
             featureSelectionLabels[i] = new FeatureSelectionLabel(list.get(i));
@@ -92,20 +92,20 @@ public class FeatureSelectedPane extends JPanel {
         }
     };
 
-    /**
-     * 更新模块列表
-     *
-     * @param formatControlPane
-     */
-    public void updateModuleList(AbstractFormatControlPane formatControlPane) {
-        this.formatControlPane = formatControlPane;
-        vBox.removeAll();
-        addModuleList(formatControlPane.getUseModuleRelatedParamList());
-        Window window = SwingUtilities.getWindowAncestor(this);
-        if (window != null) {
-            window.validate();
-        }
-    }
+//    /**
+//     * 更新模块列表
+//     *
+//     * @param formatControlPane
+//     */
+//    public void updateModuleList(AbstractFormatControlPane formatControlPane) {
+//        this.formatControlPane = formatControlPane;
+//        vBox.removeAll();
+//        addModuleList(formatControlPane.getUseModuleRelatedParamList());
+////        Window window = SwingUtilities.getWindowAncestor(this);
+////        if (window != null) {
+////            window.validate();
+////        }
+//    }
 
     private void menuInit() {
         menu = new JPopupMenu();
@@ -123,26 +123,36 @@ public class FeatureSelectedPane extends JPanel {
     private void delModule(FeatureSelectionLabel label) {
         ModuleRelatedParam moduleRelatedParam = label.getModuleRelatedParam();
         if (moduleRelatedParam != null) {
-            if (formatControlPane != null) {
+            if (featureSelectedTabPane.getFormatControlPane() != null) {
                 String moduleId = moduleRelatedParam.getModule().getModuleId();
-                ArrayList<ModuleRelatedParam> currentUseModuleRelatedParamList = formatControlPane.getUseModuleRelatedParamList();
+                ArrayList<ModuleRelatedParam> currentUseModuleRelatedParamList = featureSelectedTabPane.getFormatControlPane().getUseModuleRelatedParamList();
                 ArrayList<Module> needModuleList = getNeedModuleList(moduleId, currentUseModuleRelatedParamList);
                 if (needModuleList.size() > 0) {//当前添加的模块有些模块需要用到 moduleId 模块，给出提示，不给删除
                     ArrayList<String> needModuleStrList = new ArrayList<>();
                     for (Module module : needModuleList) {
                         needModuleStrList.add(module.getModuleName());
                     }
-                    LazyCoderOptionPane.showMessageDialog(CodeGenerationFrameHolder.codeGenerationFrame, "无法删除\"" + moduleRelatedParam.getModule().getModuleName() + "\"模块，因为还有模块 " + StringUtils.join(needModuleStrList, "、") + "需要用到它！", "来自系统的回复",
+                    LazyCoderOptionPane.showMessageDialog((Component) CodeGenerationFrameHolder.codeGenerationFrame, "无法删除\"" + moduleRelatedParam.getModule().getModuleName() + "\"模块，因为还有模块 \"" + StringUtils.join(needModuleStrList, "、") + " \"需要用到它！", "来自系统的回复",
                             JOptionPane.INFORMATION_MESSAGE);
 
                 } else if (needModuleList.size() == 0) {//没有哪个模块需要使用该模块，可以删除
-                    int show = LazyCoderOptionPane.showConfirmDialog(CodeGenerationFrameHolder.codeGenerationFrame, "o(￣▽￣)ｄ 真的要去掉\"" + moduleRelatedParam.getModule().getModuleName() + "\"这个模块吗？那我就删了", "来自系统的确认",
+                    int show = LazyCoderOptionPane.showConfirmDialog((Component) CodeGenerationFrameHolder.codeGenerationFrame, "o(￣▽￣)ｄ 真的要去掉\"" + moduleRelatedParam.getModule().getModuleName() + "\"这个模块吗？删除以后会立即保存当前内容无法还原", "来自系统的确认",
                             JOptionPane.YES_NO_OPTION);
                     if (show == JOptionPane.YES_OPTION) {
                         ArrayList<ModuleRelatedParam> moduleRelatedParamList = new ArrayList<ModuleRelatedParam>();
+
+                        //再找找有哪些对用户屏蔽的模块，只是这个模块才需要用的，把它也删了
+                        ArrayList<Module> moduleList = featureSelectedTabPane.getFormatControlPane().getModuleListForOnlyAddThisModule(moduleRelatedParam.getModule());
+                        ArrayList<ModuleRelatedParam> moduleRelatedParamArrayList = AbstractFormatControlPane.arrayListModuletrantoArrayListModuleRelatedParam(moduleList);
+
                         moduleRelatedParamList.add(moduleRelatedParam);
-                        formatControlPane.delModuleList(moduleRelatedParamList);
-                        LazyCoderOptionPane.showMessageDialog(CodeGenerationFrameHolder.codeGenerationFrame, "已经去掉\"" + moduleRelatedParam.getModule().getModuleName() + "\"模块了!", "来自系统的回复",
+                        moduleRelatedParamList.addAll(moduleRelatedParamArrayList);
+
+                        featureSelectedTabPane.getFormatControlPane().delModuleList(moduleRelatedParamList);
+                        CodeGenerationFrameHolder.featureSelectedPane.updateModuleList(CodeGenerationFrameHolder.codeControlTabbedPane.getMainCodeControlPane());
+
+                        CodeGenerationFrameHolder.generateCode();
+                        LazyCoderOptionPane.showMessageDialog((Component) CodeGenerationFrameHolder.codeGenerationFrame, "已经去掉\"" + moduleRelatedParam.getModule().getModuleName() + "\"模块，并保存当前代码内容!", "来自系统的回复",
                                 JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
@@ -171,5 +181,6 @@ public class FeatureSelectedPane extends JPanel {
         }
         return list;
     }
+
 
 }

@@ -37,6 +37,7 @@ public class ClassNameNode extends AbstractModuleSelectBaseNode {
     @Getter
     private JCheckBox classNameCheckBox = null;
 
+    @Getter
     private TheClassification classification = null;
 
     public ClassNameNode(TheClassification classification) {

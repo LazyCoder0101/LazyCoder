@@ -19,7 +19,6 @@ public class InitChoiceMenu extends JMenuBar {
 
     private InitOpratingContainer initOpratingContainer;
 
-
     private InitChoiceMenu() {
         this.menu = new JMenu();
         this.add(menu);

@@ -6,6 +6,11 @@ import java.io.File;
 public class DatabaseFileStructure {
 
 	/**
+	 * 显示预览测试文件夹（显示）对应预览测试文件的识别秘钥（lazycoder_preview_test_pro）
+	 */
+	public static final String PREVIEW_TEST_PRO_FILE_IDENTIFY_SECRET_KEY = "dd55c2ca0b1f86e40f1d137e228fd2a6";
+
+	/**
 	 * 显示文件夹对应数据库文件的识别秘钥
 	 */
 	public static final String DB_FILE_IDENTIFY_SECRET_KEY = "13f599f025b855b1a72fd55c7b3d38d4";
@@ -24,6 +29,11 @@ public class DatabaseFileStructure {
 	 * 数据库标志文件名
 	 */
 	static final String DB_IDENTIFY_FILE_NAME = "db" + SysFileStructure.PRO_SUFFIX;
+
+	/**
+	 * 预览测试项目的标志文件名
+	 */
+	public static final  String PREVIEW_TEST_PRO_IDENTIFY_FILE_NAME = "priview_test_pro" + SysFileStructure.PRO_SUFFIX;
 
 	/**
 	 * （放置“添加文件” 组件存放的默认文件）的文件夹名称
@@ -59,6 +69,10 @@ public class DatabaseFileStructure {
 	 */
 	public static File getDBIdentifyFile(File parentFile) {
 		return (new File(parentFile.getAbsolutePath() + File.separator + DB_IDENTIFY_FILE_NAME));
+	}
+
+	public static File getPreviewTestProFileIdentifyFile(File parentFile){
+		return (new File(parentFile.getAbsolutePath() + File.separator + PREVIEW_TEST_PRO_IDENTIFY_FILE_NAME));
 	}
 
 	/**

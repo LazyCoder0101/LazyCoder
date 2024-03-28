@@ -3,15 +3,15 @@ package com.lazycoder.uicodegeneration.generalframe.operation;
 import com.lazycoder.database.CodeFormatFlagParam;
 import com.lazycoder.database.common.ModuleRelatedParam;
 import com.lazycoder.database.model.ImportCode;
+import com.lazycoder.database.model.Module;
 import com.lazycoder.database.model.ModuleInfo;
+import com.lazycoder.database.model.formodule.ModuleStaticMethod;
+import com.lazycoder.service.ModuleUseSetting;
 import com.lazycoder.service.fileStructure.SourceGenerateFileMethod;
 import com.lazycoder.service.service.SysService;
+import com.lazycoder.service.vo.AssociatedModule;
 import com.lazycoder.service.vo.element.mark.ImportMarkElement;
-import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
-import com.lazycoder.uicodegeneration.component.CodeGenerationModuleCustomFunctionNameHolder;
-import com.lazycoder.uicodegeneration.component.CodeGenerationModuleCustomVariableHolder;
-import com.lazycoder.uicodegeneration.component.CodeGenerationModuleFormatFunctionNameHolder;
-import com.lazycoder.uicodegeneration.component.CodeGenerationModuleFormatVariableHolder;
+import com.lazycoder.uicodegeneration.component.*;
 import com.lazycoder.uicodegeneration.component.generalframe.FormatControlPaneLable;
 import com.lazycoder.uicodegeneration.component.operation.container.AbstractFormatContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
@@ -24,14 +24,15 @@ import com.lazycoder.uicodegeneration.generalframe.variable.holder.AbstractForma
 import com.lazycoder.uicodegeneration.generalframe.variable.holder.CustomVariableHolder;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractFormatControlPaneModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.GeneralFormatControlPaneInterface;
+import lombok.Getter;
+
+import javax.swing.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JSplitPane;
-import lombok.Getter;
 
 public abstract class AbstractFormatControlPane extends JSplitPane
         implements FormatControlPaneInterface, GeneralFormatControlPaneInterface {
@@ -67,11 +68,12 @@ public abstract class AbstractFormatControlPane extends JSplitPane
     /**
      * 分割比例
      */
-    private double dividerLocation = 0.6;
+    private double dividerLocation = 0.53;
 
     public AbstractFormatControlPane() {
         // this.dividerLocation = dividerLocation;
-        setOrientation(JSplitPane.VERTICAL_SPLIT);// 设置分割线方向
+        //setOrientation(JSplitPane.VERTICAL_SPLIT);// 设置分割线方向
+        setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         setOneTouchExpandable(true);
         this.addComponentListener(cAdapter);
         this.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, propertyChangeListener);
@@ -156,7 +158,12 @@ public abstract class AbstractFormatControlPane extends JSplitPane
         }
     }
 
-    public void addInit(ArrayList<ModuleRelatedParam> moduleRelatedParamList) {
+    /**
+     *
+     * @param moduleRelatedParamList 需要添加的模块
+     *
+     */
+    public void addInit(ArrayList<ModuleRelatedParam> moduleRelatedParamList){
         for (ModuleRelatedParam temp : moduleRelatedParamList) {
 
             if (false == CodeGenerationFrameHolder.codeControlTabbedPane.checkTheModuleHaveOrNot(temp.getModuleInfo())) {//检查有没有添加过这个模块
@@ -472,5 +479,78 @@ public abstract class AbstractFormatControlPane extends JSplitPane
             opratingContainer.setNoUserSelectionIsRequiredValue();
         }
     }
+
+    /**
+     * 把 ArrayList<Module>列表转成ArrayList<ModuleRelatedParam>
+     * @param list
+     * @return
+     */
+    public static ArrayList<ModuleRelatedParam> arrayListModuletrantoArrayListModuleRelatedParam(ArrayList<Module> list) {
+        ArrayList<ModuleRelatedParam> returnList = new ArrayList<>();
+        ModuleRelatedParam moduleRelatedParam;
+        for (Module module : list) {
+            moduleRelatedParam = new ModuleRelatedParam(module, SysService.MODULE_INFO_SERVICE.getModuleInfo(module.getModuleId()));
+            returnList.add(moduleRelatedParam);
+        }
+        return returnList;
+    }
+
+    //再找找有哪些对用户屏蔽的模块，只是因为添加这个模块才需要添加进来的
+    public ArrayList<Module> getModuleListForOnlyAddThisModule(Module theOneModule) {
+        ArrayList<Module> now_user_shielding_module_list = new ArrayList<>(),
+                now_user_select_module_list = new ArrayList<>();
+        Module moduleTemp;
+        ArrayList<Integer> useSettingValues;
+        //首先拿到所有的对用户屏蔽的模块和用户选择的模块
+        for (ModuleRelatedParam moduleRelatedParam : useModuleRelatedParamList) {
+            moduleTemp = moduleRelatedParam.getModule();
+            useSettingValues = ModuleStaticMethod.getUseSettingValues(moduleTemp);
+            if (useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {//对用户屏蔽
+                now_user_shielding_module_list.add(moduleTemp);
+            } else {
+                now_user_select_module_list.add(moduleTemp);
+            }
+        }
+
+        //去掉要删除那个，得到要留下的
+        Module theModuleTemp;
+        for (int i = 0; i < now_user_select_module_list.size(); i++) {
+            theModuleTemp = now_user_select_module_list.get(i);
+            if (theModuleTemp.getModuleId().equals(theOneModule.getModuleId())) {
+                now_user_select_module_list.remove(i);
+            }
+        }
+        //获取其他模块需要的所有模块
+        List<AssociatedModule> otherNeedModuleAssociatedModuleList = SysService.MODULE_SERVICE.getAllNeedUsedModuleList(now_user_select_module_list);
+        List<Module> otherNeedModuleList = new ArrayList<>();
+        for (AssociatedModule associatedModule : otherNeedModuleAssociatedModuleList) {
+            otherNeedModuleList.add(associatedModule.getModule());
+        }
+
+        //获取这个模块所需要的模块
+        List<AssociatedModule> theOneNeedModuleAssociatedModuleList = SysService.MODULE_SERVICE.getAllNeedUsedModuleList(theOneModule);
+        List<Module> theOneNeedModuleList = new ArrayList<>();
+        for (AssociatedModule associatedModule : theOneNeedModuleAssociatedModuleList) {
+            theOneNeedModuleList.add(associatedModule.getModule());
+        }
+
+        Module now_user_shielding_module_temp;
+        for (int t = 0; t < now_user_shielding_module_list.size(); t++) {//查一下当前所有不需要用户选择的模块，有哪个是其他模块需要的，有的话去掉
+            now_user_shielding_module_temp = now_user_shielding_module_list.get(t);
+            if (SysService.MODULE_SERVICE.haveTheModuleInList(otherNeedModuleList, now_user_shielding_module_temp)) {
+                now_user_shielding_module_list.remove(t);
+                t = 0;
+            }
+        }
+        for (int k = 0; k < now_user_shielding_module_list.size(); k++) {//查一下now_user_shielding_module_list剩下的模块，看看有哪个是 这个模块所需要的模块没有的，把它删了，那剩下的就都是因为添加这个模块才添加的
+            now_user_shielding_module_temp = now_user_shielding_module_list.get(k);
+            if (SysService.MODULE_SERVICE.haveTheModuleInList(theOneNeedModuleList, now_user_shielding_module_temp) == false) {
+                now_user_shielding_module_list.remove(k);
+                k = 0;
+            }
+        }
+        return now_user_shielding_module_list;
+    }
+
 
 }

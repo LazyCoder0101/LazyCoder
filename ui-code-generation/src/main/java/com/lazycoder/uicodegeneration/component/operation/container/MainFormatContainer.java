@@ -7,12 +7,16 @@ import com.lazycoder.database.model.MainInfo;
 import com.lazycoder.service.fileStructure.SourceGenerateFileStructure;
 import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.component.operation.component.typeset.format.main.MainSetTypeFolder;
-import com.lazycoder.uicodegeneration.component.operation.container.component.FormatTypePane;
+import com.lazycoder.uicodegeneration.component.operation.container.component.CodeHiddenControlButton;
+import com.lazycoder.uicodegeneration.component.operation.container.component.FormatOpratinglHiddenButton;
+import com.lazycoder.uicodegeneration.component.operation.container.component.MainSetCodeHiddenControlButton;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FormatOpratingContainerParam;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.MainSetTypeOperatingContainerParam;
 import com.lazycoder.uicodegeneration.generalframe.codeshown.CodeShowPane;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.MainFormatContainerModel;
+
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -21,12 +25,12 @@ public class MainFormatContainer extends AbstractFormatContainer {
     /**
      * 宽度比例
      */
-    protected static final double PROPOTION = 0.29;
+//    protected static final double PROPOTION = 0.29;
     /**
      *
      */
     private static final long serialVersionUID = -8299364698878473271L;
-    private MainSetTypeFolder mainSetTypeFolder;
+    private MainSetTypeFolder mainSetTypeFolder = null;
     private MainInfo mainInfo;
 
     /**
@@ -42,15 +46,16 @@ public class MainFormatContainer extends AbstractFormatContainer {
         super();
         this.mainInfo = mainInfo;
         if (mainInfo.getFormatState() == MainInfo.TRUE_) {
-            init(true, true, "格式", AbstractCommandOpratingContainer.PROPOTION);
-        } else {
-            init(false, true, "格式", AbstractCommandOpratingContainer.PROPOTION);
+            init(true, AbstractCommandOpratingContainer.PROPOTION);
+        }
+        if (this.mainInfo.getNumOfSetCodeType() > 0) {
+            setInit(true, AbstractCommandOpratingContainer.PROPOTION);
         }
         currentCodeFileName = fileName;
         this.formatOpratingContainerParam = formatOpratingContainerParam;
         generateOperationalContent(formatOpratingContainerParam);
 
-        if (formatState == true) {
+        if (this.mainInfo.getNumOfSetCodeType() > 0) {
             MainSetTypeOperatingContainerParam mainSetTypeOperatingContainerParam = new MainSetTypeOperatingContainerParam();
             mainSetTypeOperatingContainerParam.setFormatContainer(MainFormatContainer.this);
             mainSetTypeOperatingContainerParam
@@ -58,10 +63,11 @@ public class MainFormatContainer extends AbstractFormatContainer {
             mainSetTypeOperatingContainerParam.setMainInfo(mainInfo);
 
             mainSetTypeFolder = new MainSetTypeFolder(mainSetTypeOperatingContainerParam);
-            formatTypePane.setInternalComponent(mainSetTypeFolder.getParentScrollPane());
+            setScrollPane.setViewportView(mainSetTypeFolder);
         }
         setAppropriateSize();
     }
+
 
     /**
      * 还原
@@ -74,14 +80,15 @@ public class MainFormatContainer extends AbstractFormatContainer {
         super();
         this.formatOpratingContainerParam = formatOpratingContainerParam;
         this.mainInfo = model.getMainInfo();
-        if (model.isFormatState() == true) {
-            init(true, true, "格式", AbstractCommandOpratingContainer.PROPOTION);
-        } else if (model.isFormatState() == false) {
-            init(false, true, "格式", AbstractCommandOpratingContainer.PROPOTION);
+        if (mainInfo.getFormatState() == MainInfo.TRUE_) {
+            init(true, AbstractCommandOpratingContainer.PROPOTION);
+        }
+        if (mainInfo.getNumOfSetCodeType() > 0) {
+            setInit(true, AbstractCommandOpratingContainer.PROPOTION);
         }
 
         restoreContent(model, formatOpratingContainerParam);
-        if (formatState == true) {
+        if (this.mainInfo.getNumOfSetCodeType() > 0) {
             MainSetTypeOperatingContainerParam mainSetTypeOperatingContainerParam = new MainSetTypeOperatingContainerParam();
             mainSetTypeOperatingContainerParam.setFormatContainer(MainFormatContainer.this);
             mainSetTypeOperatingContainerParam
@@ -90,15 +97,56 @@ public class MainFormatContainer extends AbstractFormatContainer {
 
             mainSetTypeFolder = new MainSetTypeFolder(mainSetTypeOperatingContainerParam,
                     model.getMainSetTypeFolderModel());
-            formatTypePane.setInternalComponent(mainSetTypeFolder.getParentScrollPane());
+            setScrollPane.setViewportView(mainSetTypeFolder.getParentScrollPane());
         }
         setAppropriateSize();
     }
 
     @Override
+    protected FormatOpratinglHiddenButton formatOpratinglHiddenButtonInit() {
+        return new FormatOpratinglHiddenButton(true, "格式") {
+            @Override
+            public void doSomethingWhenMousePressed(boolean expanded) {
+                super.doSomethingWhenMousePressed(expanded);
+                if (expanded == false) {//收起面板时，收起面板的所有组件
+                    formatOperatingPane.collapseThis();
+                    if (setState == true) {
+                        if (mainSetTypeFolder != null) {
+                            mainSetTypeFolder.collapseThis();
+                        }
+                    }
+                }
+            }
+        };
+    }
+
+    @Override
+    protected CodeHiddenControlButton setCodeHiddenControlButtonInit() {
+        return new MainSetCodeHiddenControlButton(true) {
+            @Override
+            public void doSomethingWhenMousePressed(boolean expanded) {
+                super.doSomethingWhenMousePressed(expanded);
+                formatControlPane.collapseThis();
+                if (this.isExpanded() == false && mainSetTypeFolder != null) {//收起面板时，收起隐藏面板的所有组件
+                    mainSetTypeFolder.collapseThis();
+                }
+            }
+
+            @Override
+            public void doClick() {
+                super.doClick();
+                formatControlPane.collapseThis();
+                if (this.isExpanded() == true && mainSetTypeFolder != null) {
+                    mainSetTypeFolder.collapseThis();
+                }
+            }
+        };
+    }
+
+    @Override
     public void delThis() {
         super.delThis();
-        if (formatState == true) {
+        if (this.setState == true) {
             if (mainSetTypeFolder != null) {
                 mainSetTypeFolder.delThis();
             }
@@ -196,7 +244,7 @@ public class MainFormatContainer extends AbstractFormatContainer {
         // TODO Auto-generated method stub
         ArrayList<OpratingContainerInterface> opratingContainerList = new ArrayList<OpratingContainerInterface>();
         opratingContainerList.addAll(super.getAllOpratingContainerListInThis());
-        if (formatState == true) {
+        if (this.setState == true) {
             opratingContainerList.addAll(mainSetTypeFolder.getAllOpratingContainer());
         }
         return opratingContainerList;
@@ -206,9 +254,8 @@ public class MainFormatContainer extends AbstractFormatContainer {
     public void collapseThis() {
         // TODO Auto-generated method stub
         super.collapseThis();
-        if (formatState == true) {
+        if (this.setState == true) {
             mainSetTypeFolder.collapseThis();
-            formatTypePane.packUpPanel();
         }
 
     }
@@ -216,11 +263,9 @@ public class MainFormatContainer extends AbstractFormatContainer {
     @Override
     public void autoCollapse(OpratingContainerInterface currentOpratingContainer) {
         super.autoCollapse(currentOpratingContainer);
-        if (formatState == true && currentOpratingContainer != null) {
+        if (this.setState == true && currentOpratingContainer != null) {
             if (MarkElementName.MAIN_SET_TYPE_MARK.equals(currentOpratingContainer.getPathFind().getMarkType())) {
                 mainSetTypeFolder.autoCollapse(currentOpratingContainer);
-            } else {
-                formatTypePane.packUpPanel();
             }
         }
     }
@@ -239,21 +284,43 @@ public class MainFormatContainer extends AbstractFormatContainer {
     public void delModuleOpratingContainerFromComponent(String moduleId) {
         // TODO Auto-generated method stub
         super.delModuleOpratingContainerFromComponent(moduleId);
-        if (formatState == true) {
+        if (this.setState == true) {
             mainSetTypeFolder.delModuleOpratingContainerFromComponent(moduleId);
         }
     }
 
-    @Override
-    public FormatTypePane generateSettingsButton() {
-        FormatTypePane formatTypeBt = new FormatTypePane() {
 
-            @Override
-            protected void doSomeThingWhenPackUpPanel() {
-                mainSetTypeFolder.collapseThis();
+    @Override
+    public Dimension getRequiredDimension() {
+        int w = getDrawer().getContentWidth(),
+                h = 0;
+
+        h = h + HIDDEN_HEIGHT;
+        h = h + (int) (getDrawer().getContentHeight() * getDrawer().getRatio());
+
+        if (this.setState) {//加载模块设置相关组件
+            h = h + HIDDEN_HEIGHT;
+            if (getSetDrawer() != null) {
+                h = h + (int) (getSetDrawer().getContentHeight() * getSetDrawer().getRatio());
             }
-        };
-        return formatTypeBt;
+        }
+        return new Dimension(w, h);
     }
+
+    @Override
+    public int getRequiredHeight() {
+        int h = 0;
+        h = h + HIDDEN_HEIGHT;
+        h = h + (int) (getDrawer().getContentHeight() * getDrawer().getRatio());
+
+        if (this.setState) {
+            h = h + HIDDEN_HEIGHT;
+            if (getSetDrawer() != null) {
+                h = h + (int) (getSetDrawer().getContentHeight() * getSetDrawer().getRatio());
+            }
+        }
+        return h;
+    }
+
 
 }

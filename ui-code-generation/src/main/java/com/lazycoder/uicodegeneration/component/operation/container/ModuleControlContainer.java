@@ -8,6 +8,7 @@ import com.lazycoder.service.service.SysService;
 import com.lazycoder.uicodegeneration.PathFind;
 import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.component.operation.component.typeset.module.ModuleTypeContainer;
+import com.lazycoder.uicodegeneration.component.operation.container.component.FormatOpratinglHiddenButton;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FormatOpratingContainerParam;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.ModuleTypeOperatingContainerParam;
 import com.lazycoder.uicodegeneration.generalframe.codeshown.CodeShowPane;
@@ -30,7 +31,21 @@ public class ModuleControlContainer extends AbstractFormatContainer {
     public ModuleControlContainer() {
         super();
         // TODO Auto-generated constructor stub
-        init(false, true, "模块控制", ModuleTypeContainer.THE_PROPORTION);
+        init( true, ModuleTypeContainer.THE_PROPORTION);
+    }
+
+
+    @Override
+    protected FormatOpratinglHiddenButton formatOpratinglHiddenButtonInit() {
+        return new FormatOpratinglHiddenButton(true, "模块控制") {
+            @Override
+            public void doSomethingWhenMousePressed(boolean expanded) {
+                super.doSomethingWhenMousePressed(expanded);
+                if (expanded == false) {//收起面板时，收起面板的所有组件
+                    formatOperatingPane.collapseThis();
+                }
+            }
+        };
     }
 
     /**

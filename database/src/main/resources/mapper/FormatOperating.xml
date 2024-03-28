@@ -97,6 +97,14 @@
         order by additionalSerialNumber
     </select>
 
+    <select id="getAdditionalFeatureSelectionNum"
+            resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="table"/>
+        where formatType = #{formatType}
+        order by additionalSerialNumber
+    </select>
+
     <update id="updateFormatOperating"
             parameterType="com.lazycoder.database.model.general.format.GenerlFormatOperatingModel">
         update

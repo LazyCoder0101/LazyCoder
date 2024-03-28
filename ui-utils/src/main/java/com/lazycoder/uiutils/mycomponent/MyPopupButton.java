@@ -1,23 +1,12 @@
 package com.lazycoder.uiutils.mycomponent;
 
-import com.lazycoder.uiutils.popup.AfPopupPanel;
 import com.lazycoder.uiutils.utils.SysUtil;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.HierarchyBoundsAdapter;
-import java.awt.event.HierarchyBoundsListener;
-import java.awt.event.HierarchyEvent;
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 
 public class MyPopupButton extends MyToggleButton {//implements  ComponentListener {
@@ -33,9 +22,13 @@ public class MyPopupButton extends MyToggleButton {//implements  ComponentListen
     protected int paneWidth = 50, paneHeight = 200, buttonWidth = 80, buttonHeight = 30;
 //    protected int paneWidth = 550, paneHeight = 200, buttonWidth = 80, buttonHeight = 30;
 
-    private MyPopupPanel popupPanel = null;
+    protected MyPopupPanel popupPanel = null;
 
-    private JComponent theComponentPane;
+    protected JComponent theComponentPane;
+
+    @Setter
+    @Getter
+    private boolean draggerFlag = false;
 
     public MyPopupButton() {
         super();
@@ -127,6 +120,9 @@ public class MyPopupButton extends MyToggleButton {//implements  ComponentListen
                             xMoveTemp = paneWidthTemp;
 //                    paneWidth = paneWidthTemp;
                     popupPanel = getPopupPanel(theComponentPane);
+//                    if (draggerFlag){
+//                        new FrameDragger().applyTo(theComponentPane);
+//                    }
 
                     if (paneWidth < buttonWidthTemp) {
                         xMoveTemp = buttonWidthTemp;
@@ -210,7 +206,6 @@ public class MyPopupButton extends MyToggleButton {//implements  ComponentListen
         return new MyPopupPanel(componentPane, this);
     }
 
-
     private ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -218,33 +213,37 @@ public class MyPopupButton extends MyToggleButton {//implements  ComponentListen
         }
     };
 
-    class MyPopupPanel extends AfPopupPanel {
-
-        /**
-         *
-         */
-        private static final long serialVersionUID = 8883917611734573302L;
-
-        protected MyPopupButton popupButton;
-
-        public MyPopupPanel(JComponent component, MyPopupButton popupButton) {
-            setLayout(new BorderLayout());
-            add(component, BorderLayout.CENTER);
-            this.popupButton = popupButton;
-            setBorder(BorderFactory.createRaisedBevelBorder());
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(popupButton.paneWidth, popupButton.paneHeight);
-        }
-
-        // 隐藏 Popup
-//        @Override
-//        public void hidePopup() {
-//            super.hidePopup();
+//    class MyPopupPanel extends AfPopupPanel {
+//
+//        /**
+//         *
+//         */
+//        private static final long serialVersionUID = 8883917611734573302L;
+//
+//        protected MyPopupButton popupButton;
+//
+//        private JComponent contentComponent;
+//
+//        public MyPopupPanel(JComponent component, MyPopupButton popupButton) {
+//            setLayout(new BorderLayout());
+//            add(component, BorderLayout.CENTER);
+//            this.popupButton = popupButton;
+//            this.contentComponent = component;
+//            setBorder(BorderFactory.createRaisedBevelBorder());
 //        }
-
-    }
+//
+//        @Override
+//        public Dimension getPreferredSize() {
+//            return new Dimension(popupButton.paneWidth, popupButton.paneHeight);
+//        }
+//
+//
+//        // 隐藏 Popup
+////        @Override
+////        public void hidePopup() {
+////            super.hidePopup();
+////        }
+//
+//    }
 
 }

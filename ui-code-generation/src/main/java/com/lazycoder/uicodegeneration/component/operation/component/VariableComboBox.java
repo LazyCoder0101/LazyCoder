@@ -23,26 +23,20 @@ import com.lazycoder.uicodegeneration.generalframe.operation.CodeControlTabbedPa
 import com.lazycoder.uicodegeneration.generalframe.variable.AbstractVariable;
 import com.lazycoder.uicodegeneration.generalframe.variable.CustomVariable;
 import com.lazycoder.uicodegeneration.generalframe.variable.FormatVariable;
-import com.lazycoder.uicodegeneration.generalframe.variable.holder.AbstractFormatVariableHolder;
-import com.lazycoder.uicodegeneration.generalframe.variable.holder.AbstractVariableHolder;
-import com.lazycoder.uicodegeneration.generalframe.variable.holder.CustomVariableHolder;
-import com.lazycoder.uicodegeneration.generalframe.variable.holder.ModuleCustomVariableHolder;
-import com.lazycoder.uicodegeneration.generalframe.variable.holder.ModuleFormatVariableHolder;
+import com.lazycoder.uicodegeneration.generalframe.variable.holder.*;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.CodeGenerationFormatUIComonentInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.FormatStructureModelInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.component.VariableMeta;
-import java.awt.Color;
-import java.awt.Dimension;
+import com.lazycoder.uiutils.component.CustomComboBox;
+import lombok.Getter;
+
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import lombok.Getter;
 
 /**
  * 变量选择
@@ -57,6 +51,8 @@ public class VariableComboBox extends JMenuBar
      */
     private static final long serialVersionUID = -1029570728312032645L;
 
+    protected Icon arrowIcon;
+
     private JMenu menu;
 
     private VariableMenuItem selectedMenuItem = null;
@@ -70,6 +66,8 @@ public class VariableComboBox extends JMenuBar
     private VariableMeta variableMeta = null;
 
     public VariableComboBox() {
+        arrowIcon = getArrowIcon();
+
         this.menu = new JMenu();
         this.add(menu);
         menu.setBackground(Color.white);
@@ -771,6 +769,22 @@ public class VariableComboBox extends JMenuBar
 //            }
 //        }
 
+    }
+
+    private Icon getArrowIcon() {
+        if (arrowIcon == null) {
+            arrowIcon = new CustomComboBox.ArrowIcon(16, 10, 10, 10, new Color(96, 98, 102), SwingConstants.BOTTOM);
+        }
+        return arrowIcon;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // 在组件的右侧绘制图标
+        int x = getWidth() - arrowIcon.getIconWidth();
+        int y = (getHeight() - arrowIcon.getIconHeight()) / 2; // 垂直居中
+        arrowIcon.paintIcon(this, g, x, y);
     }
 
 }

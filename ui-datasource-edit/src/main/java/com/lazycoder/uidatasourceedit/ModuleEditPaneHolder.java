@@ -61,6 +61,9 @@ public class ModuleEditPaneHolder {
      */
     public static UsingRangeCombobox usingRange = null;
 
+    /**
+     * 调用相关模块设置 对应的菜单
+     */
     public static RelatedModuleInfoMenu relatedModuleInfoMenu = null;
 
     /**

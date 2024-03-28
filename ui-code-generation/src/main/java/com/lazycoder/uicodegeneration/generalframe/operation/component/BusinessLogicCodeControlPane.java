@@ -4,12 +4,8 @@ import com.lazycoder.database.common.MarkElementName;
 import com.lazycoder.database.common.ModuleRelatedParam;
 import com.lazycoder.lazycodercommon.vo.CommandAddRelatedAttribute;
 import com.lazycoder.uicodegeneration.PathFind;
-import com.lazycoder.uicodegeneration.component.operation.container.AbstractFormatContainer;
-import com.lazycoder.uicodegeneration.component.operation.container.AdditionalFormatContainer;
-import com.lazycoder.uicodegeneration.component.operation.container.AdditionalFunctionOpratingContainer;
-import com.lazycoder.uicodegeneration.component.operation.container.FunctionOpratingContainer;
-import com.lazycoder.uicodegeneration.component.operation.container.MainFormatContainer;
-import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
+import com.lazycoder.uicodegeneration.component.operation.container.*;
+import com.lazycoder.uicodegeneration.component.operation.container.component.BusinessLogicCodeControlPaneUI;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.AdditionalFunctionOperatingContainerParam;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FormatOpratingContainerParam;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FunctionOperatingContainerParam;
@@ -21,7 +17,10 @@ import com.lazycoder.uicodegeneration.proj.stostr.operation.container.Additional
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.AdditionalFunctionOpratingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.FunctionOpratingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.MainFormatContainerModel;
-import java.awt.Component;
+import com.lazycoder.uiutils.folder.Folder;
+import com.lazycoder.uiutils.utils.SysUtil;
+
+import java.awt.*;
 import java.util.ArrayList;
 
 public class BusinessLogicCodeControlPane extends AbstractAdditiveMethodCodePane {
@@ -113,6 +112,25 @@ public class BusinessLogicCodeControlPane extends AbstractAdditiveMethodCodePane
         return formatContainer;
     }
 
+    /**
+     * 添加功能容器
+     *
+     * @param container
+     */
+    @Override
+    public void addContainer(Folder container) {
+        tabs.add(container);
+        this.add(container);
+        // 为该面板添加抽屉事件
+        ((BusinessLogicCodeControlPaneUI) ui).addTab(container);
+        SysUtil.updateFrameUI(container);
+    }
+
+    @Override
+    protected void setFolderPaneUI() {
+        setUI(new BusinessLogicCodeControlPaneUI());
+    }
+
     public void clearAll() {
         tabs.clear();
         this.removeAll();
@@ -199,4 +217,5 @@ public class BusinessLogicCodeControlPane extends AbstractAdditiveMethodCodePane
         commandAddRelatedAttribute.setOtherAttribute(CommandAddRelatedAttribute.NONE_OTHER_ATTRIBUTE);
         return commandAddRelatedAttribute;
     }
+
 }

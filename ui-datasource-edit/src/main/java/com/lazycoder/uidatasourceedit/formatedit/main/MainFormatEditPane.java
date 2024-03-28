@@ -19,13 +19,15 @@ import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.format
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.format.code.MainDeafaultFormatCodePane;
 import com.lazycoder.uidatasourceedit.formatedit.main.settype.MainSetCodeEditPane;
 import com.lazycoder.uidatasourceedit.moduleedit.CheckInterface;
+import com.lazycoder.uidatasourceedit.previewtest.PreviewTestProButton;
 import com.lazycoder.uiutils.component.animatedcarousel.net.codemap.carousel.helpcarousel.OperatingTipButton;
 import com.lazycoder.uiutils.mycomponent.MyButton;
 import com.lazycoder.uiutils.mycomponent.MyToolBar;
 import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -33,12 +35,6 @@ import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 
 
 public class MainFormatEditPane extends JPanel implements CheckInterface, MainPaneInterface {
@@ -68,6 +64,8 @@ public class MainFormatEditPane extends JPanel implements CheckInterface, MainPa
 
     private MainInputEditPane mainInputEditPane;
     private MyButton save, newBt, openBt;
+
+    private PreviewTestProButton previewTestBt;
 
     private MainSetCodeEditPane mainSetCodeEditPane;
 
@@ -100,6 +98,9 @@ public class MainFormatEditPane extends JPanel implements CheckInterface, MainPa
         save = new MyButton("保存");
         save.addActionListener(listener);
         toolBar.add(save);
+
+        previewTestBt = new PreviewTestProButton();
+        toolBar.add(previewTestBt);
 
         mainOperatingTipButton = new OperatingTipButton(
                 SysFileStructure.getOperatingTipImageFolder(

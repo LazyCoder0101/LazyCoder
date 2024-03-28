@@ -1,15 +1,10 @@
 package com.lazycoder.uiutils.folder;
 
 import com.lazycoder.uiutils.utils.SysUtil;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import javax.swing.JComponent;
-import javax.swing.Scrollable;
 
 public class FolderPane extends JComponent implements Scrollable {
 
@@ -35,7 +30,15 @@ public class FolderPane extends JComponent implements Scrollable {
     public FolderPane(int intterTabPadding) {
         // TODO Auto-generated constructor stub
         this.intterTabPadding = intterTabPadding;
+        setFolderPaneUI();
+        setFolderPaneLayout();
+    }
+
+    protected void setFolderPaneUI(){
         setUI(new FoldPaneUI());
+    }
+
+    protected void setFolderPaneLayout(){
         setLayout(new FolderPaneLayout());
     }
 

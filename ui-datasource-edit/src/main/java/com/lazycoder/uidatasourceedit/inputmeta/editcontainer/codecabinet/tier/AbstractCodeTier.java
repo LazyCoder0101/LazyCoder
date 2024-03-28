@@ -9,10 +9,11 @@ import com.lazycoder.service.vo.element.lable.BaseLableElement;
 import com.lazycoder.service.vo.element.lable.control.ContentChooseControl;
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.command.AbstractFunctionCodeInputPane;
 import com.lazycoder.uidatasourceedit.moduleedit.CheckInterface;
-import java.util.ArrayList;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import lombok.Getter;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.util.ArrayList;
 
 public abstract class AbstractCodeTier extends JScrollPane implements FunctionCodePaneInterface, CheckInterface {
 
@@ -116,5 +117,10 @@ public abstract class AbstractCodeTier extends JScrollPane implements FunctionCo
     public void makeCorrespondingLabelScutcheonRespond(BaseLableElement lableElement, Border border) {
         codePane.makeCorrespondingLabelScutcheonRespond(lableElement, border);
     }
+
+    /**
+     * 收起这个代码面板对应的记录引入代码内容的面板
+     */
+    public abstract void packUpCorrespondingImportCodePane();
 
 }

@@ -7,17 +7,14 @@ import com.lazycoder.service.vo.element.mark.FunctionMarkElement;
 import com.lazycoder.uidatasourceedit.ModuleEditPaneHolder;
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.command.code.FunctionCodePane;
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.CodeLabelCombobox;
+import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.CommandContainerCodesImportCodeShowButton;
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.ModuleCodeUsePropetyMenu;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
-import java.awt.Component;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 public class FunctionCodeTier extends AbstractCodeTier {
 
@@ -36,6 +33,8 @@ public class FunctionCodeTier extends AbstractCodeTier {
 
     private int typeSerialNumber;
 
+    private CommandContainerCodesImportCodeShowButton commandContainerCodesImportCodeShowButton = null;
+
     public FunctionCodeTier(int typeSerialNumber, int operatingOrdinalNumber, int codeOrdinal, ContainerModel model) {
         this.typeSerialNumber = typeSerialNumber;
         this.operatingOrdinalNumber = operatingOrdinalNumber;
@@ -51,6 +50,8 @@ public class FunctionCodeTier extends AbstractCodeTier {
         codePane.setUpdateScrollpane(scrollPane);
         panel.add(scrollPane, BorderLayout.CENTER);
 
+        commandContainerCodesImportCodeShowButton = new CommandContainerCodesImportCodeShowButton();
+
         JLabel clLabel = new JLabel("代码标签：");
         clLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         codeLabelCombobox = new CodeLabelCombobox();
@@ -60,6 +61,8 @@ public class FunctionCodeTier extends AbstractCodeTier {
         codeUsePropetyMenu = new ModuleCodeUsePropetyMenu();
 
         Box box = Box.createHorizontalBox();
+        box.add(commandContainerCodesImportCodeShowButton);
+        box.add(Box.createHorizontalStrut(10));
         box.add(clLabel);
         box.add(codeLabelCombobox);
         box.add(Box.createHorizontalStrut(10));
@@ -95,6 +98,7 @@ public class FunctionCodeTier extends AbstractCodeTier {
         super.reductionContent(codeModel);
         codeLabelCombobox.setSelectedCodeLabel(theCodeModel.getCodeLabelId());
         codeUsePropetyMenu.setCodeUsePropertyParam(theCodeModel.getCodeUsePropertyParam());
+        commandContainerCodesImportCodeShowButton.setThisImport(theCodeModel.getImportCodeParam());
     }
 
     @Override
@@ -119,12 +123,20 @@ public class FunctionCodeTier extends AbstractCodeTier {
         codeModel.setCodeFormatParam(getCodeParam());
         codeModel.setCodeLabelId(codeLabelCombobox.getCodeLabelId());
         codeModel.setCodeUsePropertyParam(codeUsePropetyMenu.getCodeUsePropetyParam());
+        codeModel.setImportCodeParam(commandContainerCodesImportCodeShowButton.getImportCodeParam());
         return codeModel;
     }
 
     @Override
     public String getPathParam() {
         return "";
+    }
+
+    @Override
+    public void packUpCorrespondingImportCodePane() {
+        if (commandContainerCodesImportCodeShowButton != null) {
+            commandContainerCodesImportCodeShowButton.packUpPanel();
+        }
     }
 
 }

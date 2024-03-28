@@ -7,15 +7,12 @@ import com.lazycoder.service.vo.element.lable.control.functionadd.FunctionAddCod
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.command.code.MethodAddCodePane;
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.CodeLabelCombobox;
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.CodeUsePropetyMenu;
+import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.CommandContainerCodesImportCodeShowButton;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
-import java.awt.Component;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 public class MethodAddFunctionCodeTier extends AbstractCodeTier {
 
@@ -32,6 +29,8 @@ public class MethodAddFunctionCodeTier extends AbstractCodeTier {
 
     private CodeUsePropetyMenu codeUsePropetyMenu;
 
+    private CommandContainerCodesImportCodeShowButton commandContainerCodesImportCodeShowButton = null;
+
     public MethodAddFunctionCodeTier(int operatingOrdinalNumber, int codeOrdinal, ContainerModel model) {
         this.operatingOrdinalNumber = operatingOrdinalNumber;
         this.codeOrdinal = codeOrdinal;
@@ -46,6 +45,8 @@ public class MethodAddFunctionCodeTier extends AbstractCodeTier {
         scrollPane = new JScrollPane(codePane);
         panel.add(scrollPane, BorderLayout.CENTER);
 
+        commandContainerCodesImportCodeShowButton = new CommandContainerCodesImportCodeShowButton();
+
         JLabel clLabel = new JLabel("代码标签：");
         clLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
         codeLabelCombobox = new CodeLabelCombobox();
@@ -54,6 +55,8 @@ public class MethodAddFunctionCodeTier extends AbstractCodeTier {
         codeUsePropetyMenu = new CodeUsePropetyMenu();
 
         Box box = Box.createHorizontalBox();
+        box.add(commandContainerCodesImportCodeShowButton);
+        box.add(Box.createHorizontalStrut(10));
         box.add(clLabel);
         box.add(codeLabelCombobox);
         box.add(Box.createHorizontalStrut(10));
@@ -89,6 +92,7 @@ public class MethodAddFunctionCodeTier extends AbstractCodeTier {
         codePane.reductionContent(elementList);
         codeLabelCombobox.setSelectedCodeLabel(functionAddCodeModel.getCodeLabelId());
         codeUsePropetyMenu.setCodeUsePropertyParam(functionAddCodeModel.getCodeUsePropertyParam());
+        commandContainerCodesImportCodeShowButton.setThisImport(functionAddCodeModel.getImportCodeParam());
 //		code_pane.reductionContent(methodAddFunctionStorageFormat);
     }
 
@@ -110,6 +114,7 @@ public class MethodAddFunctionCodeTier extends AbstractCodeTier {
 //		codeModel.setCodeOrdinal(codePane.getSerialNumber());
         codeModel.setCodeLabelId(codeLabelCombobox.getCodeLabelId());
         codeModel.setCodeUsePropertyParam(codeUsePropetyMenu.getCodeUsePropetyParam());
+        codeModel.setImportCodeParam(commandContainerCodesImportCodeShowButton.getImportCodeParam());
         return codeModel;
     }
 
@@ -118,5 +123,11 @@ public class MethodAddFunctionCodeTier extends AbstractCodeTier {
         return "";
     }
 
+    @Override
+    public void packUpCorrespondingImportCodePane() {
+        if (commandContainerCodesImportCodeShowButton != null) {
+            commandContainerCodesImportCodeShowButton.packUpPanel();
+        }
+    }
 
 }

@@ -8,6 +8,7 @@ import com.lazycoder.database.model.ImportCode;
 import com.lazycoder.lazycodercommon.vo.CommandAddRelatedAttribute;
 import com.lazycoder.service.fileStructure.SourceGenerateFileStructure;
 import com.lazycoder.service.fileStructure.SourceGenerateProFile;
+import com.lazycoder.service.service.SysService;
 import com.lazycoder.service.service.impl.FormatCodeFileServiceImpl;
 import com.lazycoder.service.vo.element.mark.BaseMarkElement;
 import com.lazycoder.service.vo.element.mark.HarryingMark;
@@ -21,25 +22,17 @@ import com.lazycoder.uicodegeneration.component.generalframe.codeshown.format.Ab
 import com.lazycoder.uicodegeneration.component.generalframe.codeshown.format.BaseBean;
 import com.lazycoder.uicodegeneration.component.generalframe.codeshown.format.LabelBean;
 import com.lazycoder.uicodegeneration.component.generalframe.codeshown.format.lable.FunctionAddBean;
-import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.AddCodeEditParamForFormat;
-import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.AddCodeEditParamForMark;
-import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.DelCodeEditParamForFormat;
-import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.DelCodeEditParamForMark;
-import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.UpdateCodeEditParamForFormat;
-import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.UpdateCodeEditParamForMark;
+import com.lazycoder.uicodegeneration.component.operation.container.codeeditparam.*;
 import com.lazycoder.uicodegeneration.proj.stostr.codeshown.CodeShowPaneModel;
 import com.lazycoder.uiutils.mycomponent.CodeShowTextArea;
 import com.lazycoder.utils.FileUtil;
 import com.lazycoder.utils.JsonUtil;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import lombok.Getter;
 import lombok.Setter;
 import org.fife.ui.rtextarea.RTextScrollPane;
+
+import java.io.*;
+import java.util.ArrayList;
 
 
 public class CodeShowPane extends RTextScrollPane {
@@ -483,12 +476,18 @@ public class CodeShowPane extends RTextScrollPane {
      * @param importCode
      */
     public void addImportCode(ImportMarkElement thanImportMarkElement, ImportCode importCode) {
+        int position = getCodeShowTextArea().getCaretPosition();
         if (GeneralFileFormat.MODULE_TYPE == this.codeModel.getFormatType()) {// 如果就是这个模块的代码文件，不添加本模块的引入代码
             if (this.codeModel.getModuleId().equals(importCode.getModuleId()) == false) {
                 formatModel.addImportCode(thanImportMarkElement, importCode);
             }
         } else {
             formatModel.addImportCode(thanImportMarkElement, importCode);
+        }
+        try {
+            showCodeContent(position);
+        }catch (Exception e){
+            SysService.SYS_SERVICE_SERVICE.log_error(e.getMessage());
         }
     }
 

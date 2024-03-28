@@ -53,6 +53,13 @@ public interface FormatOperatingMapper {
     public List<AdditionalFeatureSelection> getAdditionalFeatureSelectionList(@Param("formatType") int formatType);
 
     /**
+     * 获取其他可选列表的数量（formatType固定传DataFormatType.ADDITIONAL_TYPE，为避免后面发生改变才传参数）
+     *
+     * @return
+     */
+    public Integer getAdditionalFeatureSelectionNum(@Param("formatType") int formatType);
+
+    /**
      * 获取必填模板控制
      *
      * @param formatType 固定传DataFormatType.mainType

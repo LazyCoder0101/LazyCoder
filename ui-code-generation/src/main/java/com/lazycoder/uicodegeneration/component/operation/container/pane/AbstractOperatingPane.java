@@ -7,70 +7,22 @@ import com.lazycoder.service.service.SysService;
 import com.lazycoder.service.vo.base.BaseElementInterface;
 import com.lazycoder.service.vo.base.StringElement;
 import com.lazycoder.service.vo.element.lable.BaseLableElement;
-import com.lazycoder.service.vo.element.lable.control.CodeInputControl;
-import com.lazycoder.service.vo.element.lable.control.ConstantControl;
-import com.lazycoder.service.vo.element.lable.control.ContentChooseControl;
-import com.lazycoder.service.vo.element.lable.control.CorrespondingAdditionalDefaultFileControl;
-import com.lazycoder.service.vo.element.lable.control.CustomMethodNameControl;
-import com.lazycoder.service.vo.element.lable.control.CustomVariableControl;
-import com.lazycoder.service.vo.element.lable.control.FileSelectorControl;
-import com.lazycoder.service.vo.element.lable.control.FunctionAddControl;
-import com.lazycoder.service.vo.element.lable.control.InfrequentlyUsedSettingControl;
-import com.lazycoder.service.vo.element.lable.control.MethodChooseControl;
-import com.lazycoder.service.vo.element.lable.control.NoteControl;
-import com.lazycoder.service.vo.element.lable.control.PictureControl;
-import com.lazycoder.service.vo.element.lable.control.TextInputControl;
-import com.lazycoder.service.vo.element.lable.control.VariableControl;
+import com.lazycoder.service.vo.element.lable.control.*;
 import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.component.operation.OperatingPaneBusinessTraverse;
-import com.lazycoder.uicodegeneration.component.operation.component.CodeGenerationComponentInterface;
-import com.lazycoder.uicodegeneration.component.operation.component.CodeInputBox;
-import com.lazycoder.uicodegeneration.component.operation.component.ConstantMutipleInoutBox;
-import com.lazycoder.uicodegeneration.component.operation.component.ContentChooseMultiSelectCombobox;
-import com.lazycoder.uicodegeneration.component.operation.component.ContentChooseRadioCombobox;
-import com.lazycoder.uicodegeneration.component.operation.component.CorrespondingAdditionalDefaultFileCombobox;
-import com.lazycoder.uicodegeneration.component.operation.component.CustomMethodNameTextField;
-import com.lazycoder.uicodegeneration.component.operation.component.CustomVariableMutipleInputBox;
-import com.lazycoder.uicodegeneration.component.operation.component.CustomVariableRadioTextField;
-import com.lazycoder.uicodegeneration.component.operation.component.FileSelectorTextFieldWithPicture;
-import com.lazycoder.uicodegeneration.component.operation.component.FunctionAddInputPaneForCodeGeneration;
-import com.lazycoder.uicodegeneration.component.operation.component.InfrequentlyUsedSettingButton;
-import com.lazycoder.uicodegeneration.component.operation.component.MethodChoiceMenu;
-import com.lazycoder.uicodegeneration.component.operation.component.NoteButton;
-import com.lazycoder.uicodegeneration.component.operation.component.PictureButton;
-import com.lazycoder.uicodegeneration.component.operation.component.TextInputTextArea;
-import com.lazycoder.uicodegeneration.component.operation.component.TextInputTextField;
-import com.lazycoder.uicodegeneration.component.operation.component.VariableComboBox;
+import com.lazycoder.uicodegeneration.component.operation.component.*;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.GeneralContainerComponentParam;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractOpratingPaneElement;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.CodeGenerationFormatUIComonentInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.FormatStructureModelInterface;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.AbstractLabelMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.CodeInputMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.ConstantMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.ContentChooseMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.CorrespondingAdditionalDefaultFileMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.CustomMethodMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.CustomVariableMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.FileSelectorMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.FunctionAddMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.InfrequentlyUsedSettingMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.MethodChooseMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.NoteMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.PictureMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.StringMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.TextInputMeta;
-import com.lazycoder.uicodegeneration.proj.stostr.operation.component.VariableMeta;
-import java.awt.Component;
+import com.lazycoder.uicodegeneration.proj.stostr.operation.component.*;
+
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.JTextPane;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Element;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 public abstract class AbstractOperatingPane extends JTextPane
         implements OperatingPaneBusinessTraverse {
@@ -263,9 +215,16 @@ public abstract class AbstractOperatingPane extends JTextPane
 //            e.printStackTrace();
 //        }
 //        return lineCount;
-        Element element = doc.getDefaultRootElement();
-        return element.getElementCount();
+
+//        Element element = doc.getDefaultRootElement();
+//        return element.getElementCount();
+
+        int contentHeight = getPreferredSize().height;
+        int lineHeight = getFontMetrics(getFont()).getHeight();
+        int lines = contentHeight / lineHeight;
+        return lines;
     }
+
 
     protected void generateOperationalComponent(GeneralContainerComponentParam codeGenerationalOpratingContainerParam, BaseElementInterface element) {
         if (element instanceof TextInputControl) {

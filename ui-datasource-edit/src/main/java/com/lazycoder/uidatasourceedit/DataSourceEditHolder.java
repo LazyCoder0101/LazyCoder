@@ -19,13 +19,12 @@ import com.lazycoder.uidatasourceedit.moduleedit.ModuleEditPane;
 import com.lazycoder.uidatasourceedit.modulemanagement.ModuleManagementPane;
 import com.lazycoder.uiutils.utils.MyColoursBorder;
 import com.lazycoder.utils.FileUtil;
-import java.awt.Color;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 
 public class DataSourceEditHolder extends GeneralHolder {
 
@@ -54,8 +53,6 @@ public class DataSourceEditHolder extends GeneralHolder {
      * 自动定位坐标
      */
     public static JCheckBox autoPositionCheckBox;
-
-
 
     /**
      * 删除多余的文件

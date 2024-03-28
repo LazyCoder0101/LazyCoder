@@ -17,7 +17,6 @@ import com.lazycoder.uicodegeneration.component.generalframe.FormatControlPaneLa
 import com.lazycoder.uicodegeneration.component.operation.container.AbstractFormatContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.AdditionalFormatContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
-import com.lazycoder.uicodegeneration.component.operation.container.component.FormatTypePane;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FormatOpratingContainerParam;
 import com.lazycoder.uicodegeneration.generalframe.codeshown.CodeShowPane;
 import com.lazycoder.uicodegeneration.generalframe.functionname.FormatFunctionName;
@@ -31,10 +30,11 @@ import com.lazycoder.uicodegeneration.generalframe.variable.holder.AdditionalFor
 import com.lazycoder.uicodegeneration.proj.stostr.operation.AdditionalFormatControlPaneModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractFormatControlPaneModel;
 import com.lazycoder.utils.JsonUtil;
+import lombok.Getter;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 
 public class AdditionalFormatControlPane extends AbstractFormatControlPane {
 
@@ -350,19 +350,6 @@ public class AdditionalFormatControlPane extends AbstractFormatControlPane {
     public ArrayList<CodeShowPane> getSubCodePaneList() {
         // TODO Auto-generated method stub
         return CodeGenerationFrameHolder.codeShowPanel.getAdditionalSubCodePaneList(additionalSerialNumber);
-    }
-
-    @Override
-    protected void whenMovingTheDividing() {
-        super.whenMovingTheDividing();
-        if (formatContainer != null) {
-            FormatTypePane bt = formatContainer.getSetTypeButton();
-            if (bt != null) {
-                if (bt.isSelected() == true) {
-                    bt.doClick();
-                }
-            }
-        }
     }
 
 }

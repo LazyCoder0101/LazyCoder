@@ -10,19 +10,14 @@ import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.uiutils.htmlstyte.HtmlPar;
 import com.lazycoder.uiutils.mycomponent.multistatecomponent.LazyCoderMultiStateCheckBox;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
+import lombok.Getter;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.border.Border;
-import lombok.Getter;
 
 /**
  * 改自 https://www.jiweichengzhu.com/article/5ff1be1e8abe463794aa1011b4bcff96
@@ -63,6 +58,19 @@ public class ModuleNameNode extends AbstractModuleSelectBaseNode {
         this.module = module;
         this.moduleSelectListPane = moduleSelectListPane;
         initNodeGUI();
+    }
+
+    /**
+     * 根据某个srcModuleNameNode复制一个一样的
+     * @param srcModuleNameNode
+     * @return
+     */
+    public static ModuleNameNode cloneModuleNameNode(ModuleNameNode srcModuleNameNode){
+        ModuleNameNode moduleNameNode = new ModuleNameNode(srcModuleNameNode.getModule(), srcModuleNameNode.moduleSelectListPane);
+        //实际上不应该只是设置状态这么简单，因为这组件有些状态还有对应的提示，只是目前业务上用不到，直接设置状态不管这部分内容
+        LazyCoderMultiStateCheckBox.setState(srcModuleNameNode.currentCheckBox,moduleNameNode.currentCheckBox);
+        moduleNameNode.associatedModuleList.addAll(srcModuleNameNode.associatedModuleList);
+        return moduleNameNode;
     }
 
     @Override
@@ -145,11 +153,20 @@ public class ModuleNameNode extends AbstractModuleSelectBaseNode {
                     if (flag) {
                         selected = selectedState;
                         setPreUseModule(null);
+
+                        //对存放所有数据的数组也要进行和上面一样的同步操作，由于本方法是用户点击后直接操作调用，在这里对all对应项也进行一样的操作
+                        ModuleNameNode correspondingModuleNameNode = moduleSelectListPane.getCorrespondingAllModuleNameNode(this);
+                        correspondingModuleNameNode.selected = selectedState;
+                        correspondingModuleNameNode.setPreUseModule(null);
                     } else {
                         currentCheckBox.setModuleSelectedNull(null);
                         if (moduleSelectListPane != null) {
                             moduleSelectListPane.cancelSelectedModule(module);
                         }
+
+                        //对存放所有数据的数组也要进行和上面一样的同步操作，由于本方法是用户点击后直接操作调用，在这里对all对应项也进行一样的操作
+                        ModuleNameNode correspondingModuleNameNode = moduleSelectListPane.getCorrespondingAllModuleNameNode(this);
+                        correspondingModuleNameNode.currentCheckBox.setModuleSelectedNull(null);
                     }
                 }
             }
@@ -159,6 +176,11 @@ public class ModuleNameNode extends AbstractModuleSelectBaseNode {
             if (moduleSelectListPane != null) {
                 moduleSelectListPane.cancelSelectedModule(module);
             }
+
+            //对存放所有数据的数组也要进行和上面一样的同步操作，由于本方法是用户点击后直接操作调用，在这里对all对应项也进行一样的操作
+            ModuleNameNode correspondingModuleNameNode = moduleSelectListPane.getCorrespondingAllModuleNameNode(this);
+            correspondingModuleNameNode.selected = selectedState;
+            correspondingModuleNameNode.currentCheckBox.setModuleSelectedNull(null);
         }
     }
 

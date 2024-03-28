@@ -13,12 +13,11 @@ import com.lazycoder.uiutils.folder.Drawer;
 import com.lazycoder.uiutils.folder.Folder;
 import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
+
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 
 public class ImportCodeFolder extends Folder
         implements CheckInterface, ModuleEditComponentInterface, EditContainerPane {
@@ -99,9 +98,9 @@ public class ImportCodeFolder extends Folder
         ImportCodeInputPane importCodeInputPane;
         if (module.getEnabledState() == Module.TRUE_ && moduleInfo.getNumOfImport() > 0) {//有编辑过,且此前添加过内容，显示之前编辑过的内容
             List<ImportCode> list = SysService.IMPORT_CODE_SERVICE.getImportCodeList(moduleInfo.getModuleId());
-            for (int a = 0; a < list.size(); a++) {
+            for (ImportCode importCode: list) {
                 curentImportNum++;
-                importCodeInputPane = new ImportCodeInputPane(list.get(a));
+                importCodeInputPane = new ImportCodeInputPane(importCode);
                 vBox.add(importCodeInputPane);
             }
 

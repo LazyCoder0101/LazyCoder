@@ -12,15 +12,15 @@ import com.lazycoder.uicodegeneration.proj.stostr.operation.AdditionalFormatCont
 import com.lazycoder.uicodegeneration.proj.stostr.operation.MainFormatControlPaneModel;
 import com.lazycoder.uiutils.mycomponent.CodeTabbedPane;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Color;
-import java.awt.Component;
+import lombok.Getter;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import lombok.Getter;
 
 
 public class CodeControlTabbedPane extends CodeTabbedPane implements MouseListener {
@@ -455,7 +455,7 @@ public class CodeControlTabbedPane extends CodeTabbedPane implements MouseListen
         if (pressTheCloseButton(e) == true) {
             int tabNumber = getUI().tabForCoordinate(this, e.getX(), e.getY());
             String fileName = this.getTitleAt(tabNumber);
-            int n = LazyCoderOptionPane.showConfirmDialog(null, "真的要删除\"" + fileName + "\"这个面板，以及它所有的相关内容吗?", "确认一下",
+            int n = LazyCoderOptionPane.showConfirmDialog(null, "真的要删除\"" + fileName + "\"这个面板，以及它所有的相关内容吗?\n删除后会立刻保存当前内容无法还原！", "确认一下",
                     JOptionPane.YES_NO_OPTION);
             if (n == JOptionPane.OK_OPTION) {
                 Component component = getComponent(tabNumber);
@@ -463,6 +463,7 @@ public class CodeControlTabbedPane extends CodeTabbedPane implements MouseListen
                     ((AdditionalFormatControlPane) component).delThisPane();
                 }
                 super.mouseClicked(e);
+                CodeGenerationFrameHolder.generateCode();
             }
         }
     }

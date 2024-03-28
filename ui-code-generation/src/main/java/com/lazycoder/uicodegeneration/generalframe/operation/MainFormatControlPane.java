@@ -13,7 +13,6 @@ import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.component.generalframe.FormatControlPaneLable;
 import com.lazycoder.uicodegeneration.component.operation.container.AbstractFormatContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.MainFormatContainer;
-import com.lazycoder.uicodegeneration.component.operation.container.component.FormatTypePane;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.FormatOpratingContainerParam;
 import com.lazycoder.uicodegeneration.generalframe.codeshown.CodeShowPane;
 import com.lazycoder.uicodegeneration.generalframe.functionname.FormatFunctionName;
@@ -27,6 +26,7 @@ import com.lazycoder.uicodegeneration.generalframe.variable.holder.MainFormatVar
 import com.lazycoder.uicodegeneration.proj.stostr.operation.MainFormatControlPaneModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractFormatControlPaneModel;
 import com.lazycoder.utils.JsonUtil;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,7 +133,7 @@ public class MainFormatControlPane extends AbstractFormatControlPane {
             List<VariableData> variableList = SysService.VARIABLE_DATA_SERVICE.getMainVariableDataList();
             if (variableList != null) {
                 FormatVariable formatVariable;
-                ArrayList<String> dataTypeList,dataVariableTypeList, labelTypeList, labelVariableTypeList;
+                ArrayList<String> dataTypeList, dataVariableTypeList, labelTypeList, labelVariableTypeList;
                 for (VariableData mainVariableDataTemp : variableList) {
                     int variableId = VariableIDGenerator.generateCodeSerialNumber();
                     formatVariable = new FormatVariable();
@@ -142,8 +142,8 @@ public class MainFormatControlPane extends AbstractFormatControlPane {
                     formatVariable.setVariableRange(mainVariableDataTemp.getTheAvaliableRange());
 
                     dataTypeList = formatVariable.getDataTypeList();
-                            dataVariableTypeList = VariableData
-                                    .getDataTypeList(mainVariableDataTemp.getDataTypeParam());
+                    dataVariableTypeList = VariableData
+                            .getDataTypeList(mainVariableDataTemp.getDataTypeParam());
                     if (dataVariableTypeList != null) {
                         dataTypeList.addAll(dataVariableTypeList);
                     }
@@ -209,20 +209,6 @@ public class MainFormatControlPane extends AbstractFormatControlPane {
         setParam(model);
         return model;
     }
-
-    @Override
-    protected void whenMovingTheDividing() {
-        super.whenMovingTheDividing();
-        if (mainFormatContainer != null) {
-            FormatTypePane bt = mainFormatContainer.getSetTypeButton();
-            if (bt != null) {
-                if (bt.isSelected() == true) {
-                    bt.doClick();
-                }
-            }
-        }
-    }
-
 
     @Override
     public FormatControlPaneLable getFormatControlPaneLable() {

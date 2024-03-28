@@ -200,7 +200,7 @@ public class ModuleFilePutCodePane extends ImportCodeFileEditPane
      *
      * @return
      */
-    private ArrayList<String> getModuleFormatFileNameList() {
+    public ArrayList<String> getModuleFormatFileNameList() {
         ArrayList<String> list = new ArrayList<>();
         for (int i = 0; i < getTabbedPane().getComponentCount(); i++) {
             list.add(getTabbedPane().getTitleAt(i));

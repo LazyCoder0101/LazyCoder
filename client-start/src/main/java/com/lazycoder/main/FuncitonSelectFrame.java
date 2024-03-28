@@ -18,24 +18,16 @@ import com.lazycoder.uiutils.mycomponent.MyButton;
 import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.FileUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 public class FuncitonSelectFrame extends LazyCoderCommonFrame {
 
@@ -48,10 +40,6 @@ public class FuncitonSelectFrame extends LazyCoderCommonFrame {
     private JLabel authorLabel;
 
     private OperatingTipButton tipButton;
-
-//    生成程序时，在方法添加组件添加功能的校验有问题
-//
-//    需要再考虑一个功能，如果添加在方法组件里面，要是当前添加的方法，和这个方法组件不符，是否可以添加到外面同样的标签的位置
 
     /**
      * Create the frame.
@@ -186,7 +174,7 @@ public class FuncitonSelectFrame extends LazyCoderCommonFrame {
                 DataSourceEditHolder.temporaryErrorList.clear();//先把临时错误列表清空
 //            GeneralHolder.changeUserDB("lannong_first");
 
-                new CodeGenerationFrame(proInit);
+                new CodeGenerationFrame(proInit, CodeGenerationFrame.USER_CODE_GENERATETION_FRAME);
                 toaster.hidePopup();
 
                 if (CodeGenerationFrameHolder.temporaryErrorList.size() > 0) {//如果在执行过程中出现问题，把问题显示出来

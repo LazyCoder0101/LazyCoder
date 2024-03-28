@@ -4,9 +4,11 @@ import com.lazycoder.service.vo.datasourceedit.command.ContainerModel;
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.command.CommandCodeControl;
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.general.GeneralCodePane;
 import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.codecabinet.tier.AbstractCodeTier;
+import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.HiddenCodeButton;
 import com.lazycoder.uidatasourceedit.moduleedit.CheckInterface;
 import com.lazycoder.uiutils.utils.SysUtil;
 import javax.swing.JScrollPane;
+import java.awt.*;
 
 public abstract class AbstractCodeCabinet extends GeneralCodePane implements CodeCabinetInterface, CheckInterface {
 
@@ -45,17 +47,44 @@ public abstract class AbstractCodeCabinet extends GeneralCodePane implements Cod
 	public boolean check() {
 		// TODO Auto-generated method stub
 		boolean flag = true;
-		AbstractCodeTier temp;
+		AbstractCodeTier codeTier;
+		Component temp;
 		for (int i = 0; i < getVBox().getComponentCount(); i++) {
-			if (getVBox().getComponent(i) instanceof AbstractCodeTier) {
-				temp = (AbstractCodeTier) getVBox().getComponent(i);
-				if (temp.check() == false) {
+			temp = getVBox().getComponent(i);
+			if (temp instanceof AbstractCodeTier) {
+				codeTier = (AbstractCodeTier) temp;
+				if (codeTier.check() == false) {
 					flag = false;
 					break;
 				}
 			}
 		}
 		return flag;
+	}
+
+	@Override
+	protected HiddenCodeButton generateHiddenCodeButton(boolean expanded) {
+		return new HiddenCodeButton(expanded){
+			@Override
+			public void doSomethingWhenMousePressed(boolean expanded) {
+				packUpAllImportCodePane();
+			}
+		};
+	}
+
+	/**
+	 * 收起所有代码面板对应的记录引入代码内容的面板
+	 */
+	public void packUpAllImportCodePane(){
+		AbstractCodeTier codeTier;
+		Component temp;
+		for (int i = 0; i < getVBox().getComponentCount(); i++) {
+			temp = getVBox().getComponent(i);
+			if (temp instanceof AbstractCodeTier) {
+				codeTier = (AbstractCodeTier) temp;
+				codeTier.packUpCorrespondingImportCodePane();
+			}
+		}
 	}
 
 	@Override

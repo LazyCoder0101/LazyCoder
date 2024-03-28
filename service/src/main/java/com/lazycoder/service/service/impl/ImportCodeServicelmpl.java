@@ -1,18 +1,19 @@
 package com.lazycoder.service.service.impl;
 
-import com.lazycoder.database.dao.ImportCodeMapper;
+import com.lazycoder.database.dao.ModuleImportCodeMapper;
 import com.lazycoder.database.model.ImportCode;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Component(value = "ImportCodeServicelmpl")
 public class ImportCodeServicelmpl {
 
 	@Autowired
-	private ImportCodeMapper dao;
+	private ModuleImportCodeMapper dao;
 
 	/**
 	 * 保存

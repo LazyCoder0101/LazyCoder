@@ -10,22 +10,20 @@ import com.lazycoder.service.service.SysService;
 import com.lazycoder.service.vo.AssociatedModule;
 import com.lazycoder.uiutils.mycomponent.multistatecomponent.LazyCoderMultiStateComponentInterface;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
-import javax.swing.JTree;
-import javax.swing.ToolTipManager;
+import lombok.Setter;
+
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import lombok.Setter;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 改自 https://www.jiweichengzhu.com/article/5ff1be1e8abe463794aa1011b4bcff96
@@ -52,10 +50,13 @@ public class ModuleSelectListPane extends JTree {
 
     private DefaultTreeModel model;
 
-    private DefaultMutableTreeNode root;
+    //                         用来显示的根节点     真正传递数据的、所有的跟节点
+    private DefaultMutableTreeNode showRoot, allRoot;
 
     @Setter
     private UsingObject usingObject = null;
+
+    private ArrayList<ModuleRelatedParam> allModuleRelatedParamList = null;//所有需要选择的模块
 
     private Border inBorder = BorderFactory.createLineBorder(new Color(228, 228, 228), 1);
 
@@ -100,24 +101,50 @@ public class ModuleSelectListPane extends JTree {
      */
     public void showModuleList(UsingObject usingObject, ArrayList<ModuleRelatedParam> moduleRelatedParamList, int selectState) {
         //这里要加个状态，判断是添加还是修改，添加的话，把生成程序一定要使用的、还有对用户屏蔽的就行状态修改，暂定把prinull没有关联模块设置为对用户屏蔽，把preselected没有关联状态设置为一定要使用
-        root = new DefaultMutableTreeNode();
-        model = new DefaultTreeModel(root);
+        showRoot = new DefaultMutableTreeNode();
+        allRoot = new DefaultMutableTreeNode();
+        model = new DefaultTreeModel(showRoot);
+        this.allModuleRelatedParamList = moduleRelatedParamList;
         List<Module> moduleList = SysService.MODULE_SERVICE.getAllModulesUsedby(usingObject);
         if (moduleList != null) {
             ArrayList<Integer> useSettingValues;
             String currentClassName = "";
             TheClassification classification;
-            ClassNameNode classNameNode = null;
-            ModuleNameNode moduleNameNode;
+            ClassNameNode showClassNameNode = null, classNameNodeForAll = null;
+            ModuleNameNode moduleNameNode, moduleNameNodeForAll;
             for (Module moduleTemp : moduleList) {
                 if (moduleTemp.getClassName().equals(currentClassName) == false) {
                     classification = new TheClassification();
                     classification.setClassName(moduleTemp.getClassName());
-                    classNameNode = new ClassNameNode(classification);
+
+                    //创建一个用来展示的分类，添加到展示使用的节点
+                    showClassNameNode = new ClassNameNode(classification);
+                    showRoot.add(showClassNameNode);
+
+                    //再创建一个分类，用来添加到存放所有数据的节点
+                    classNameNodeForAll = new ClassNameNode(classification);
+                    allRoot.add(classNameNodeForAll);
+
                     currentClassName = moduleTemp.getClassName();
-                    root.add(classNameNode);
                 }
+
+                //创建模块节点
                 moduleNameNode = new ModuleNameNode(moduleTemp, this);
+                if (selectState == FIRST_SELECTION) {//第一次选择
+                    if (moduleTemp.getEnabledState() == Module.FALSE_) {//不能使用（未曾写过任何内容）的
+                        moduleNameNode.setPreCannotUse();
+                    }
+                } else {//再次选择
+                    if (checkTheModuleHasBeenAdded(moduleTemp, moduleRelatedParamList) == true) {
+                        moduleNameNode.setPreFirUseModule(null);
+                    } else if (moduleTemp.getEnabledState() == Module.FALSE_) {
+                        moduleNameNode.setPreCannotUse();
+                    } else {
+//                        if (useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {
+//                            moduleNameNode.setCannotChooseManual();
+//                        }
+                    }
+                }
                 /**
                  * 首次选择的时候，如果是还没编辑内容，导致不能使用的模块，设置对应状态
                  * 如果是生成程序的时候一定要是用的，设置为对应状态（第一次的时候还要进行校验，看看生成程序时一定要使用的模块里有没有还没编辑过的）
@@ -128,33 +155,34 @@ public class ModuleSelectListPane extends JTree {
                  * 如果是对用户屏蔽的，选上对应状态
                  *
                  */
-                classNameNode.add(moduleNameNode);
 
-                if (selectState == FIRST_SELECTION) {//第一次选择
-                    if (moduleTemp.getEnabledState() == Module.FALSE_) {//不能使用（未曾写过任何内容）的
-                        moduleNameNode.setPreCannotUse();
-                    } else {
-                        useSettingValues = ModuleStaticMethod.getUseSettingValues(moduleTemp);
-//                        if (useSettingValues.contains(ModuleUseSetting.MUST_USE)) {//生成程序时，一定要使用的
-//                            moduleNameNode.setParasiticModule();//第一次已经在这里将必选的内容选上
-//
-//                        } else
-                        if (useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {
-                            moduleNameNode.setCannotChooseManual();
+                useSettingValues = ModuleStaticMethod.getUseSettingValues(moduleTemp);
+                if (!useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {//再改版的改动：选择对用户屏蔽的模块都不显示出来
+                    showClassNameNode.add(moduleNameNode);
+
+                    if (selectState == FIRST_SELECTION) {//第一次选择
+                        if (moduleTemp.getEnabledState() == Module.TRUE_) {//不能使用（未曾写过任何内容）的
+                            if (useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {
+                                moduleNameNode.setCannotChooseManual();
+                            }
                         }
-                    }
-                } else {//再次选择
-                    if (checkTheModuleHasBeenAdded(moduleTemp, moduleRelatedParamList) == true) {
-                        moduleNameNode.setPreFirUseModule(null);
-                    } else if (moduleTemp.getEnabledState() == Module.FALSE_) {
-                        moduleNameNode.setPreCannotUse();
-                    } else {
-                        useSettingValues = ModuleStaticMethod.getUseSettingValues(moduleTemp);
-                        if (useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {
-                            moduleNameNode.setCannotChooseManual();
+                    } else {//再次选择
+                        if (checkTheModuleHasBeenAdded(moduleTemp, moduleRelatedParamList) == true) {
+                            //该做的上面那里做了，这里不用
+                            //moduleNameNode.setPreFirUseModule(null);
+                        } else if (moduleTemp.getEnabledState() == Module.FALSE_) {
+                            //该做的上面那里做了，这里不用
+                            //moduleNameNode.setPreCannotUse();
+                        } else {
+                            //这里代码真正是为了在需要的时候执行这里
+                            if (useSettingValues.contains(ModuleUseSetting.USER_SHIELDING)) {
+                                moduleNameNode.setCannotChooseManual();
+                            }
                         }
                     }
                 }
+                moduleNameNodeForAll = ModuleNameNode.cloneModuleNameNode(moduleNameNode);
+                classNameNodeForAll.add(moduleNameNodeForAll);
             }
         }
         setModel(model);
@@ -171,8 +199,8 @@ public class ModuleSelectListPane extends JTree {
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
         boolean flag = false;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < showRoot.getChildCount(); i++) {
+            nodeTemp = showRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 collapseFlag = true;
@@ -235,8 +263,8 @@ public class ModuleSelectListPane extends JTree {
                             AbstractModuleSelectBaseNode cate;
                             ModuleNameNode buddy;
                             // 去掉选中之外其他所有节点的特效
-                            for (int i = 0; i < root.getChildCount(); i++) {
-                                cate = (AbstractModuleSelectBaseNode) root.getChildAt(i);
+                            for (int i = 0; i < showRoot.getChildCount(); i++) {
+                                cate = (AbstractModuleSelectBaseNode) showRoot.getChildAt(i);
                                 // 三级节点
                                 for (int j = 0; j < cate.getChildCount(); j++) {
                                     buddy = (ModuleNameNode) cate.getChildAt(j);
@@ -278,8 +306,8 @@ public class ModuleSelectListPane extends JTree {
                     AbstractModuleSelectBaseNode cate = null;
                     ModuleNameNode buddy;
                     // 去掉选中之外其他所有节点的特效
-                    for (int i = 0; i < root.getChildCount(); i++) {
-                        cate = (AbstractModuleSelectBaseNode) root.getChildAt(i);
+                    for (int i = 0; i < showRoot.getChildCount(); i++) {
+                        cate = (AbstractModuleSelectBaseNode) showRoot.getChildAt(i);
 //						if (node != cate && cate.getNodeView().getBackground() != Color.ORANGE) {
 //							cate.getNodeView().setBorder(null);
 //						}
@@ -309,8 +337,8 @@ public class ModuleSelectListPane extends JTree {
         TreeNode nodeTemp;
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 for (int a = 0; a < classNameNode.getChildCount(); a++) {
@@ -335,7 +363,7 @@ public class ModuleSelectListPane extends JTree {
      *
      * @param module
      */
-    public boolean selectedModule(Module module) {
+    public boolean selectedModule(Module module) {//这里要想想是用all还是show
         //先查看这个模块需要使用什么模块A，不需要使用什么模块B
         //查看当前【不能选这个】、【该模块不能使用】 的所有模块有没有这个和 A 一样的，如果有，就不给选，给提示
         //查看当前【之前已经选过】以及【某些模块需要】、【当前已经选中】 的所有模块有没有这个和 B 一样的，如果有，也不给选，给提示
@@ -438,40 +466,64 @@ public class ModuleSelectListPane extends JTree {
             }
         }
         if (flag == false) {
-            boolean bltemp = false;
-            TreeNode nodeTemp;
-            ClassNameNode classNameNode;
-            ModuleNameNode moduleNameNode;
-            for (int i = 0; i < root.getChildCount(); i++) {
-                nodeTemp = root.getChildAt(i);
-                if (nodeTemp instanceof ClassNameNode) {
-                    classNameNode = (ClassNameNode) nodeTemp;
-                    for (int a = 0; a < classNameNode.getChildCount(); a++) {
-                        nodeTemp = classNameNode.getChildAt(a);
-                        if (nodeTemp instanceof ModuleNameNode) {
-                            moduleNameNode = (ModuleNameNode) nodeTemp;
+            boolean allbltemp = false;
+            TreeNode allnodeTemp;
+            ClassNameNode allclassNameNode;
+            ModuleNameNode allmoduleNameNode, showModuleNameNode1, showModuleNameNode2;
+            for (int i = 0; i < allRoot.getChildCount(); i++) {
+                allnodeTemp = allRoot.getChildAt(i);
+                if (allnodeTemp instanceof ClassNameNode) {
+                    allclassNameNode = (ClassNameNode) allnodeTemp;
+                    for (int a = 0; a < allclassNameNode.getChildCount(); a++) {
+                        allnodeTemp = allclassNameNode.getChildAt(a);
+                        if (allnodeTemp instanceof ModuleNameNode) {
+                            allmoduleNameNode = (ModuleNameNode) allnodeTemp;
 
-                            bltemp = false;
+                            allbltemp = false;
                             for (AssociatedModule associatedModule : needAssociatedModuleListTemp) {
-                                if (associatedModule.getModule().getModuleId().equals(moduleNameNode.getModule().getModuleId())) {
-                                    if (moduleNameNode.isModuleSelectedNull() ||
-                                            moduleNameNode.isAlsoUseModule() ||
-                                            moduleNameNode.isPreUseModule() ||
-                                            moduleNameNode.isCannotChooseManual()
+                                if (associatedModule.getModule().getModuleId().equals(allmoduleNameNode.getModule().getModuleId())) {
+                                    if (allmoduleNameNode.isModuleSelectedNull() ||
+                                            allmoduleNameNode.isAlsoUseModule() ||
+                                            allmoduleNameNode.isPreUseModule() ||
+                                            allmoduleNameNode.isCannotChooseManual()
                                     ) {//还没选的，或者已经设置为其他模块需要的，已经选了的，就设置为对应关联模块需要的模块
-                                        moduleNameNode.setAlsoUseModule(associatedModule);
+                                        allmoduleNameNode.setAlsoUseModule(associatedModule);
+
+                                        //这里只是重复了上一步的步骤，对allRoot对应模块做了上述处理后，对showRoot对应模块也做同样处理
+                                        showModuleNameNode1 = getCorrespondingShowModuleNameNode(allmoduleNameNode);
+                                        if (showModuleNameNode1 != null) {
+                                            if (showModuleNameNode1.isModuleSelectedNull() ||
+                                                    showModuleNameNode1.isAlsoUseModule() ||
+                                                    showModuleNameNode1.isPreUseModule() ||
+                                                    showModuleNameNode1.isCannotChooseManual()
+                                            ) {//还没选的，或者已经设置为其他模块需要的，已经选了的，就设置为对应关联模块需要的模块
+                                                showModuleNameNode1.setAlsoUseModule(associatedModule);
+
+                                            }
+                                        }
+                                        //到这里结束
                                     }
                                     //剩下的状态，如果是【之前选中】的，就不处理
                                     //由于之前的校验，不会是【不能选这个】、【不能使用】
-                                    bltemp = true;
+                                    allbltemp = true;
                                     break;
                                 }
                             }
-                            if (bltemp == false) {
+                            if (allbltemp == false) {
                                 for (AssociatedModule associatedModule : noUseAssociatedModuleListTemp) {
-                                    if (associatedModule.getModule().getModuleId().equals(moduleNameNode.getModule().getModuleId())) {
-                                        if (moduleNameNode.isModuleSelectedNull() || moduleNameNode.isAlsoDisableModule()) {//还没选的，或者已经设置为【不能选这个，（因为当前选中的某些模块不允许）】的，就设置为【不能选这个，（因为当前选中的某些模块不允许）】
-                                            moduleNameNode.setAlsoDisableModule(associatedModule);
+                                    if (associatedModule.getModule().getModuleId().equals(allmoduleNameNode.getModule().getModuleId())) {
+                                        if (allmoduleNameNode.isModuleSelectedNull() || allmoduleNameNode.isAlsoDisableModule()) {//还没选的，或者已经设置为【不能选这个，（因为当前选中的某些模块不允许）】的，就设置为【不能选这个，（因为当前选中的某些模块不允许）】
+                                            allmoduleNameNode.setAlsoDisableModule(associatedModule);
+
+                                            //这里只是重复了上一步的步骤，对allRoot对应模块做了上述处理后，对showRoot对应模块也做同样处理
+                                            showModuleNameNode2 = getCorrespondingShowModuleNameNode(allmoduleNameNode);
+                                            if (showModuleNameNode2 != null) {
+                                                if (showModuleNameNode2.isModuleSelectedNull() || showModuleNameNode2.isAlsoDisableModule()) {//还没选的，或者已经设置为【不能选这个，（因为当前选中的某些模块不允许）】的，就设置为【不能选这个，（因为当前选中的某些模块不允许）】
+                                                    showModuleNameNode2.setAlsoDisableModule(associatedModule);
+
+                                                }
+                                            }
+                                            //到这里结束
                                         }
                                         //剩下的状态，由于在上一步的排查，不会是【已经选中】或者【之前选中】的，就不处理
                                         //由于之前的校验，不会是【不能选这个】、【不能使用】
@@ -483,6 +535,7 @@ public class ModuleSelectListPane extends JTree {
                     }
                 }
             }
+
         }
         return flag == false ? true : false;
     }
@@ -532,51 +585,141 @@ public class ModuleSelectListPane extends JTree {
 //        log.info("只是" + module.getModuleName() + "模块不能使用的模块：" + JsonUtil.getJsonStr(onlyANoNeedModuleList));
 //        log.info(module.getModuleName() + "模块和其他模块都不能使用用的模块" + JsonUtil.getJsonStr(aModuleUseInCommonWithOtherList));
 
-        TreeNode nodeTemp;
-        ClassNameNode classNameNode;
-        ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
-            if (nodeTemp instanceof ClassNameNode) {
-                classNameNode = (ClassNameNode) nodeTemp;
-                for (int a = 0; a < classNameNode.getChildCount(); a++) {
-                    nodeTemp = classNameNode.getChildAt(a);
-                    if (nodeTemp instanceof ModuleNameNode) {
-                        moduleNameNode = (ModuleNameNode) nodeTemp;
+        ModuleNameNode showmoduleNameNode;
 
-                        if (SysService.MODULE_SERVICE.haveTheModuleInList(onlyANeedModuleList, moduleNameNode.getModule())) {//该模块只是选中的模块才需要
+        TreeNode allnodeTemp;
+        ClassNameNode allclassNameNode;
+        ModuleNameNode allmoduleNameNode;
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            allnodeTemp = allRoot.getChildAt(i);
+            if (allnodeTemp instanceof ClassNameNode) {
+                allclassNameNode = (ClassNameNode) allnodeTemp;
+                for (int a = 0; a < allclassNameNode.getChildCount(); a++) {
+                    allnodeTemp = allclassNameNode.getChildAt(a);
+                    if (allnodeTemp instanceof ModuleNameNode) {
+                        allmoduleNameNode = (ModuleNameNode) allnodeTemp;
+                        showmoduleNameNode = getCorrespondingShowModuleNameNode(allmoduleNameNode);
+
+                        if (SysService.MODULE_SERVICE.haveTheModuleInList(onlyANeedModuleList, allmoduleNameNode.getModule())) {//该模块只是选中的模块才需要
                             //这里只可能是三种情况，某些模块需要，手动选择了，还有之前选好的，只处理某些模块需要的，其他不处理
-                            if (moduleNameNode.isAlsoUseModule()) {
-                                moduleNameNode.setModuleSelectedNull();
+                            if (allmoduleNameNode.isAlsoUseModule()) {
+                                allmoduleNameNode.setModuleSelectedNull();
+
+                                //这里只是重复了上一步的步骤，对allRoot对应模块做了上述处理后，对showRoot对应模块也做同样处理
+                                if (showmoduleNameNode != null && showmoduleNameNode.isAlsoUseModule()) {//
+                                    showmoduleNameNode.setModuleSelectedNull();
+                                }
+                                //到这里结束
                             }
 
-                        } else if (SysService.MODULE_SERVICE.haveTheModuleInList(aModuleUseInCommonWithOtherList, moduleNameNode.getModule())) {//除了选中的模块以外，其他的模块也要这个模块
+                        } else if (SysService.MODULE_SERVICE.haveTheModuleInList(aModuleUseInCommonWithOtherList, allmoduleNameNode.getModule())) {//除了选中的模块以外，其他的模块也要这个模块
                             //这里只可能是三种情况，某些模块需要，手动选择了，还有之前选好的，只处理某些模块需要的，其他的，由于之前就没添加关联模块，不处理
-                            if (moduleNameNode.isAlsoUseModule()) {
-                                moduleNameNode.removeAssociatedModule(module);
-                                moduleNameNode.setAlsoUseModule(null);
+                            if (allmoduleNameNode.isAlsoUseModule()) {
+                                allmoduleNameNode.removeAssociatedModule(module);
+                                allmoduleNameNode.setAlsoUseModule(null);
+
+                                //这里只是重复了上一步的步骤，对allRoot对应模块做了上述处理后，对showRoot对应模块也做同样处理
+                                if (showmoduleNameNode != null && showmoduleNameNode.isAlsoUseModule()) {
+                                    showmoduleNameNode.removeAssociatedModule(module);
+                                    showmoduleNameNode.setAlsoUseModule(null);
+                                }
+                                //到这里结束
                             }
 
-                        } else if (SysService.MODULE_SERVICE.haveTheModuleInList(onlyANoNeedModuleList, moduleNameNode.getModule())) {//该模块只是选中的模块不能用
-                            if (moduleNameNode.isAlsoDisableModule()) {
-                                moduleNameNode.setModuleSelectedNull();
+                        } else if (SysService.MODULE_SERVICE.haveTheModuleInList(onlyANoNeedModuleList, allmoduleNameNode.getModule())) {//该模块只是选中的模块不能用
+                            if (allmoduleNameNode.isAlsoDisableModule()) {
+                                allmoduleNameNode.setModuleSelectedNull();
+
+                                //这里只是重复了上一步的步骤，对allRoot对应模块做了上述处理后，对showRoot对应模块也做同样处理
+                                if (showmoduleNameNode != null && showmoduleNameNode.isAlsoDisableModule()) {
+                                    showmoduleNameNode.setModuleSelectedNull();
+                                }
+                                //到这里结束
                             }
 
-                        } else if (SysService.MODULE_SERVICE.haveTheModuleInList(aModuleNoUseInCommonWithOtherList, moduleNameNode.getModule())) {//除了选中的模块以外，其他的模块也不能使用这个模块
-                            if (moduleNameNode.isAlsoDisableModule()) {
-                                moduleNameNode.removeAssociatedModule(module);
-                                moduleNameNode.setAlsoDisableModule(null);
+                        } else if (SysService.MODULE_SERVICE.haveTheModuleInList(aModuleNoUseInCommonWithOtherList, allmoduleNameNode.getModule())) {//除了选中的模块以外，其他的模块也不能使用这个模块
+                            if (allmoduleNameNode.isAlsoDisableModule()) {
+                                allmoduleNameNode.removeAssociatedModule(module);
+                                allmoduleNameNode.setAlsoDisableModule(null);
+
+                                //这里只是重复了上一步的步骤，对allRoot对应模块做了上述处理后，对showRoot对应模块也做同样处理
+                                if (showmoduleNameNode != null && showmoduleNameNode.isAlsoDisableModule()) {
+                                    showmoduleNameNode.removeAssociatedModule(module);
+                                    showmoduleNameNode.setAlsoDisableModule(null);
+                                }
+                                //到这里结束
                             }
                         }
                     }
                 }
             }
         }
+
     }
 
     /**
      * 生成代码那里，删除模块的检测（看看能不能删）也要改
      */
+
+    /**
+     * 获取对应的显示数组的模块
+     */
+    public ModuleNameNode getCorrespondingShowModuleNameNode(ModuleNameNode correspondingModuleNameNodeInAllList) {
+        String moduleID = correspondingModuleNameNodeInAllList.getModule().getModuleId();
+        TreeNode nodeTemp;
+        ClassNameNode classNameNode;
+        ModuleNameNode moduleNameNode, retuenModuleNameNode = null;
+        for (int i = 0; i < showRoot.getChildCount(); i++) {
+            nodeTemp = showRoot.getChildAt(i);
+            if (nodeTemp instanceof ClassNameNode) {
+                classNameNode = (ClassNameNode) nodeTemp;
+//                if (className.equals(classNameNode.getClassification().getClassName())) {
+                for (int a = 0; a < classNameNode.getChildCount(); a++) {
+                    nodeTemp = classNameNode.getChildAt(a);
+                    if (nodeTemp instanceof ModuleNameNode) {
+                        moduleNameNode = (ModuleNameNode) nodeTemp;
+                        if (moduleID.equals(moduleNameNode.getModule().getModuleId())) {
+                            retuenModuleNameNode = moduleNameNode;
+                            break;
+                        }
+                    }
+                }
+            }
+            //           }
+        }
+        return retuenModuleNameNode;
+    }
+
+    /**
+     * 获取对应在存放所有数据的数组
+     * @param correspondingModuleNameNodeInShowList
+     * @return
+     */
+    public ModuleNameNode getCorrespondingAllModuleNameNode(ModuleNameNode correspondingModuleNameNodeInShowList) {
+        String moduleID = correspondingModuleNameNodeInShowList.getModule().getModuleId();
+        TreeNode nodeTemp;
+        ClassNameNode classNameNode;
+        ModuleNameNode moduleNameNode, retuenModuleNameNode = null;
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
+            if (nodeTemp instanceof ClassNameNode) {
+                classNameNode = (ClassNameNode) nodeTemp;
+                for (int a = 0; a < classNameNode.getChildCount(); a++) {
+                    nodeTemp = classNameNode.getChildAt(a);
+                    if (nodeTemp instanceof ModuleNameNode) {
+                        moduleNameNode = (ModuleNameNode) nodeTemp;
+                        if (moduleID.equals(moduleNameNode.getModule().getModuleId())) {
+                            retuenModuleNameNode = moduleNameNode;
+                            break;
+                        }
+                    }
+                }
+            }
+            //           }
+        }
+        return retuenModuleNameNode;
+    }
+
 
     /**
      * 获取已经选中的模块的对应节点
@@ -588,8 +731,8 @@ public class ModuleSelectListPane extends JTree {
         TreeNode nodeTemp;
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 for (int a = 0; a < classNameNode.getChildCount(); a++) {
@@ -616,8 +759,8 @@ public class ModuleSelectListPane extends JTree {
         TreeNode nodeTemp;
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 for (int a = 0; a < classNameNode.getChildCount(); a++) {
@@ -644,8 +787,8 @@ public class ModuleSelectListPane extends JTree {
         TreeNode nodeTemp;
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 for (int a = 0; a < classNameNode.getChildCount(); a++) {
@@ -672,8 +815,8 @@ public class ModuleSelectListPane extends JTree {
         TreeNode nodeTemp;
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 for (int a = 0; a < classNameNode.getChildCount(); a++) {
@@ -700,8 +843,8 @@ public class ModuleSelectListPane extends JTree {
         TreeNode nodeTemp;
         ClassNameNode classNameNode;
         ModuleNameNode moduleNameNode;
-        for (int i = 0; i < root.getChildCount(); i++) {
-            nodeTemp = root.getChildAt(i);
+        for (int i = 0; i < allRoot.getChildCount(); i++) {
+            nodeTemp = allRoot.getChildAt(i);
             if (nodeTemp instanceof ClassNameNode) {
                 classNameNode = (ClassNameNode) nodeTemp;
                 for (int a = 0; a < classNameNode.getChildCount(); a++) {
@@ -733,6 +876,7 @@ public class ModuleSelectListPane extends JTree {
         }
         return moduleArrayList;
     }
+
 
 }
 

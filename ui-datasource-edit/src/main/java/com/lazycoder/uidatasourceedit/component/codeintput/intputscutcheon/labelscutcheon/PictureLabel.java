@@ -3,10 +3,9 @@ package com.lazycoder.uidatasourceedit.component.codeintput.intputscutcheon.labe
 import com.lazycoder.database.common.LabelElementName;
 import com.lazycoder.service.vo.element.lable.BaseLableElement;
 import com.lazycoder.uidatasourceedit.component.codeintput.inputmeta.pane.base.PassingComponentParams;
-import java.awt.Dimension;
-import javax.swing.BorderFactory;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class PictureLabel extends JMenuBar implements LabelComponentIntetface {
 
@@ -28,6 +27,7 @@ public class PictureLabel extends JMenuBar implements LabelComponentIntetface {
 
     public PictureLabel() {
         super();
+
         menu = new JMenu();
         menu.setBorder(BorderFactory.createRaisedBevelBorder());
 //			menu.setUI(new BEMenuUI());
@@ -72,5 +72,6 @@ public class PictureLabel extends JMenuBar implements LabelComponentIntetface {
         this.passingComponentParams = passingComponentParams;
 //        label_component_intetface.addCorrespondingComponentResponseListener(this);
     }
+
 
 }

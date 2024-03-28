@@ -6,9 +6,7 @@ public class LazyCoderCommonDialog extends JDialog {
 
     public LazyCoderCommonDialog(){
         super();
-        setModal(true);
-        setResizable(false);
-        setIconImage(LazyCoderCommonFrame.LOGO_IMAGE.getImage());
+        LazyCoderCommonRootPaneContainerManager.setCommonUI(this);
     }
 
 }

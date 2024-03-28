@@ -4,10 +4,10 @@ import com.lazycoder.uidatasourceedit.inputmeta.editcontainer.component.HiddenCo
 import com.lazycoder.uiutils.folder.Drawer;
 import com.lazycoder.uiutils.folder.Folder;
 import com.lazycoder.uiutils.utils.SysUtil;
-import java.awt.Dimension;
-import javax.swing.Box;
-import javax.swing.JScrollPane;
 import lombok.Getter;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class GeneralCodePane extends Folder {
 
@@ -41,7 +41,7 @@ public class GeneralCodePane extends Folder {
         int width = (int) (proportion * SysUtil.SCREEN_SIZE.getWidth());
 
         // 生成并添加标题组件
-        HiddenCodeButton hiddenButton = new HiddenCodeButton(expanded);
+        HiddenCodeButton hiddenButton = generateHiddenCodeButton(expanded);
         setHiddenButton(hiddenButton);
         add(hiddenButton);
 
@@ -54,6 +54,15 @@ public class GeneralCodePane extends Folder {
         Drawer drawer = new Drawer(expanded ? 1 : 0, scrollPane);
         setDrawer(drawer);
         add(drawer);
+    }
+
+    /**
+     * 生成隐藏按钮的方法
+     * @param expanded
+     * @return
+     */
+    protected HiddenCodeButton generateHiddenCodeButton(boolean expanded){
+        return new HiddenCodeButton(expanded);
     }
 
     /**

@@ -26,9 +26,10 @@ import com.lazycoder.uicodegeneration.generalframe.tool.CodeIDGenerator;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.AbstractCommandOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.ModuleSetOpratingContainerModel;
+import lombok.Getter;
+
 import java.io.File;
 import java.util.ArrayList;
-import lombok.Getter;
 
 /***
  * 承载一条模块设置方法的基本组件**
@@ -196,6 +197,7 @@ public class ModuleSetOpratingContainer extends AbstractCommandOpratingContainer
                                     setPropertyTempList, codeShowPane, moduleInfo, module, this.getModuleId()
                             );
                         }
+                        OpratingContainerStaticMethod.addCommandContainerImportCodes(codeShowPane, codeModel.getImportCodeParam());
                     }
                 }
             }

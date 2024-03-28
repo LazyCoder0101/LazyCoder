@@ -1,12 +1,7 @@
 package com.lazycoder.uidatasourceedit.moduleedit;
 
-import com.lazycoder.database.model.FunctionNameData;
-import com.lazycoder.database.model.GeneralFileFormat;
-import com.lazycoder.database.model.ImportCode;
 import com.lazycoder.database.model.Module;
-import com.lazycoder.database.model.ModuleControl;
-import com.lazycoder.database.model.ModuleInfo;
-import com.lazycoder.database.model.VariableData;
+import com.lazycoder.database.model.*;
 import com.lazycoder.service.fileStructure.SysFileStructure;
 import com.lazycoder.service.service.SysService;
 import com.lazycoder.service.vo.datasourceedit.general.AbstractEditContainerModel;
@@ -21,21 +16,20 @@ import com.lazycoder.uidatasourceedit.moduleedit.toolbar.UseSettingMenu;
 import com.lazycoder.uidatasourceedit.moduleedit.toolbar.moduleselect.CurrentModuleSelectMenu;
 import com.lazycoder.uidatasourceedit.moduleedit.toolbar.relatedmoduleinfomenu.RelatedModuleInfoMenu;
 import com.lazycoder.uidatasourceedit.moduleedit.toolbar.usingrange.UsingRangeCombobox;
+import com.lazycoder.uidatasourceedit.previewtest.PreviewTestProButton;
+import com.lazycoder.uidatasourceedit.previewtest.PreviewTestProjectFrame;
 import com.lazycoder.uiutils.component.animatedcarousel.net.codemap.carousel.helpcarousel.OperatingTipButton;
 import com.lazycoder.uiutils.mycomponent.MyButton;
 import com.lazycoder.uiutils.mycomponent.MyToolBar;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
-import java.awt.Component;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 
 public class ModuleEditPane extends JPanel implements CheckInterface {
@@ -48,6 +42,8 @@ public class ModuleEditPane extends JPanel implements CheckInterface {
     private ModuleCodeEditPane moduleEditSplitPane;
 
     private MyButton new_bt, open_bt, save_bt, set_bt;
+
+    private PreviewTestProButton previewTestBt;
 
     private CurrentModuleSelectMenu currentModuleSelectMenu = null;
 
@@ -79,6 +75,9 @@ public class ModuleEditPane extends JPanel implements CheckInterface {
                         "懒农数据源管理" + File.separator + "数据源编辑" + File.separator + "模块设置")
                 .getAbsolutePath());
         toolBar.add(moduleEditOperatingTipButton);
+
+        previewTestBt = new PreviewTestProButton();
+        toolBar.add(previewTestBt);
 
         JLabel l1 = new JLabel("当前模块：");
         toolBar.add(l1);
@@ -268,6 +267,21 @@ public class ModuleEditPane extends JPanel implements CheckInterface {
             }
         }
     };
+
+    /**
+     * 预览测试
+     */
+    private void previewTest(){
+        if (!DataSourceEditHolder.previewTesting){
+            if (SysService.SYS_PARAM_SERVICE.getEnabledState()) {
+                new PreviewTestProjectFrame();
+            }else {
+                LazyCoderOptionPane.showMessageDialog(this, "(^_−)☆	这个数据源还没用录入内容，请录入内容并保存后再进行预览测试！");
+            }
+        }else {
+            LazyCoderOptionPane.showMessageDialog(this, "(^_−)☆	已经打开预览测试功能了！");
+        }
+    }
 
     /**
      * 添加空白源文件

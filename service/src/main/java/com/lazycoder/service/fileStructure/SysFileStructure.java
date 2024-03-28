@@ -3,6 +3,7 @@ package com.lazycoder.service.fileStructure;
 import com.lazycoder.lazycoderbaseconfiguration.LazyCoderBaseConfiguration;
 import com.lazycoder.service.service.SysService;
 import com.lazycoder.utils.FileUtil;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -58,11 +59,12 @@ public class SysFileStructure {
 
     /**
      * 操作提示的图片路径
+     *
      * @param path 相对路径
      * @return
      */
     public static File getOperatingTipImageFolder(String path) {
-        return new File(LazyCoderBaseConfiguration.sysDir + File.separator + "operatingTipImage"+File.separator+path);
+        return new File(LazyCoderBaseConfiguration.sysDir + File.separator + "operatingTipImage" + File.separator + path);
     }
 
     /**
@@ -95,6 +97,33 @@ public class SysFileStructure {
 
     public static File getSysDataSourceSqlite() {
         return new File(getSysDBFolder().getAbsolutePath() + File.separator + "sysDataSource.db");
+    }
+
+    /**
+     * 获取预览测试（生成代码测试）使用的存放项目的文件夹
+     *
+     * @return
+     */
+    public static File getPreviewTestProFolder() {
+        return new File(LazyCoderBaseConfiguration.sysDir + File.separator + "previewTestPro");
+    }
+
+    /**
+     * 获取预览测试（生成代码测试）对应项目的文件夹
+     *
+     * @return
+     */
+    public static File getPreviewTestProFolder(String projectName) {
+        return new File(getPreviewTestProFolder().getAbsolutePath() + File.separator + projectName);
+    }
+
+    /**
+     * 获取预览测试（生成代码测试）使用的显示文件路径的文件夹
+     *
+     * @return
+     */
+    public static File getPreviewTestShowFolder() {
+        return new File(LazyCoderBaseConfiguration.sysDir + File.separator + "previewTestShow");
     }
 
     /**
@@ -151,6 +180,14 @@ public class SysFileStructure {
         if (file.isDirectory() == false) {
             file.mkdirs();
         }
+        file = getPreviewTestProFolder();
+        if (file.isDirectory() == false) {
+            file.mkdirs();
+        }
+        file = getPreviewTestShowFolder();
+        if (file.isDirectory() == false) {
+            file.mkdirs();
+        }
     }
 
     /**
@@ -163,10 +200,10 @@ public class SysFileStructure {
                     FileUtil.fileCopyNormal(appCoolFormatDll(), userCoolFormatDll());
                     FileUtil.setFileHidden(appCoolFormatDll());
                 } catch (IOException e) {
-                    SysService.SYS_SERVICE_SERVICE.log_error( "复制CoolFormat的dll出错，错误信息：" + e.getMessage());
+                    SysService.SYS_SERVICE_SERVICE.log_error("复制CoolFormat的dll出错，错误信息：" + e.getMessage());
                 }
             } else {
-                SysService.SYS_SERVICE_SERVICE.log_error( "CoolFormat的dll丢失");
+                SysService.SYS_SERVICE_SERVICE.log_error("CoolFormat的dll丢失");
             }
         }
     }

@@ -18,30 +18,26 @@ import com.lazycoder.uicodegeneration.component.operation.container.sendparam.Ge
 import com.lazycoder.uicodegeneration.generalframe.functionname.AbstractMethodName;
 import com.lazycoder.uicodegeneration.generalframe.functionname.CustomFunctionName;
 import com.lazycoder.uicodegeneration.generalframe.functionname.FormatFunctionName;
-import com.lazycoder.uicodegeneration.generalframe.functionname.holder.AbstractFormatFunctionNameHolder;
-import com.lazycoder.uicodegeneration.generalframe.functionname.holder.AbstractFunctionNameHolder;
-import com.lazycoder.uicodegeneration.generalframe.functionname.holder.CustomFunctionNameHolder;
-import com.lazycoder.uicodegeneration.generalframe.functionname.holder.ModuleCustomFunctionNameHolder;
-import com.lazycoder.uicodegeneration.generalframe.functionname.holder.ModuleFormatFunctionNameHolder;
+import com.lazycoder.uicodegeneration.generalframe.functionname.holder.*;
 import com.lazycoder.uicodegeneration.generalframe.operation.AdditionalFormatControlPane;
 import com.lazycoder.uicodegeneration.generalframe.operation.CodeControlTabbedPane;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.CodeGenerationFormatUIComonentInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.FormatStructureModelInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.component.MethodChooseMeta;
-import java.awt.Color;
-import java.awt.Dimension;
+import com.lazycoder.uiutils.component.CustomComboBox;
+import lombok.Getter;
+
+import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
-import lombok.Getter;
 
 public class MethodChoiceMenu extends JMenuBar implements CodeGenerationComponentInterface, CodeGenerationFormatUIComonentInterface {
+
+    protected Icon arrowIcon;
 
     private JMenu menu;
 
@@ -56,6 +52,8 @@ public class MethodChoiceMenu extends JMenuBar implements CodeGenerationComponen
     private MethodChooseMeta methodChooseMeta = null;
 
     private MethodChoiceMenu() {
+        arrowIcon = getArrowIcon();
+
         this.menu = new JMenu();
         this.add(menu);
         menu.setBorder(BorderFactory.createLoweredSoftBevelBorder());
@@ -518,6 +516,23 @@ public class MethodChoiceMenu extends JMenuBar implements CodeGenerationComponen
         if (customVariableHolderTemp != null) {
             theMethodNameList.addAll(customVariableHolderTemp.getFunctionNameList());
         }
+    }
+
+
+    private Icon getArrowIcon() {
+        if (arrowIcon == null) {
+            arrowIcon = new CustomComboBox.ArrowIcon(16, 10, 10, 10, new Color(96, 98, 102), SwingConstants.BOTTOM);
+        }
+        return arrowIcon;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // 在组件的右侧绘制图标
+        int x = getWidth() - arrowIcon.getIconWidth();
+        int y = (getHeight() - arrowIcon.getIconHeight()) / 2; // 垂直居中
+        arrowIcon.paintIcon(this, g, x, y);
     }
 
 }

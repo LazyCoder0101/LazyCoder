@@ -22,9 +22,10 @@ import com.lazycoder.uicodegeneration.generalframe.tool.CodeIDGenerator;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.AbstractCommandOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.MainSetOpratingContainerModel;
+import lombok.Getter;
+
 import java.io.File;
 import java.util.ArrayList;
-import lombok.Getter;
 
 public class MainSetContainer extends AbstractCommandOpratingContainer {
 
@@ -175,6 +176,7 @@ public class MainSetContainer extends AbstractCommandOpratingContainer {
                             if (flag) {
                                 CodeGenerationFrameHolder.codeShowPanel.setSelectedCodePane(codeShowPane);
                             }
+                            OpratingContainerStaticMethod.addCommandContainerImportCodes(codeShowPane, codeModel.getImportCodeParam());
                         }
                     }
                 }

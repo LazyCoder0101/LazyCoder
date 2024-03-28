@@ -1,22 +1,17 @@
 package com.lazycoder.uidatasourceedit.moduleedit.commandinput.moduleinit.importcode;
 
-import com.lazycoder.uidatasourceedit.DataSourceEditHolder;
 import com.lazycoder.service.vo.element.mark.ImportMarkElement;
+import com.lazycoder.uidatasourceedit.DataSourceEditHolder;
 import com.lazycoder.uidatasourceedit.ModuleEditPaneHolder;
-
-import javax.swing.JLabel;
-import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import com.lazycoder.uidatasourceedit.moduleedit.GeneralImportLable;
 import lombok.Getter;
 
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class ImportLable extends JLabel {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -510902441421283806L;
+public class ImportLable extends GeneralImportLable {
 
 	@Getter
 	private ImportMarkElement markElement;
@@ -53,11 +48,9 @@ public class ImportLable extends JLabel {
 		}
 	};
 
-
+	@Override
 	public void setLabelText(int ordinal) {
-		setText("引入" + ordinal + "：");
-		this.ordinal = ordinal;
-
+		super.setLabelText(ordinal);
 		markElement = new ImportMarkElement();
 		markElement.setModuleId(DataSourceEditHolder.currentModule.getModuleId());
 		markElement.setOrdinal(ordinal);

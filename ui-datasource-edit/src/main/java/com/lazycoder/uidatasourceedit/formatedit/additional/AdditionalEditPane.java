@@ -18,23 +18,24 @@ import com.lazycoder.service.vo.save.AdditionalFunctionNameInputData;
 import com.lazycoder.service.vo.save.AdditionalFunctionOperatingInputData;
 import com.lazycoder.service.vo.save.AdditionalVariableInputData;
 import com.lazycoder.uidatasourceedit.AbstractFormatCodeInputPane;
+import com.lazycoder.uidatasourceedit.DataSourceEditHolder;
 import com.lazycoder.uidatasourceedit.formatedit.additional.settype.AdditionalSetCodeEditPane;
 import com.lazycoder.uidatasourceedit.moduleedit.CheckInterface;
+import com.lazycoder.uidatasourceedit.previewtest.PreviewTestProButton;
+import com.lazycoder.uidatasourceedit.previewtest.PreviewTestProjectFrame;
 import com.lazycoder.uiutils.component.animatedcarousel.net.codemap.carousel.helpcarousel.OperatingTipButton;
 import com.lazycoder.uiutils.mycomponent.MyButton;
 import com.lazycoder.uiutils.mycomponent.MyToolBar;
 import com.lazycoder.utils.FileUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 
 
 public class AdditionalEditPane extends JPanel implements CheckInterface {
@@ -48,6 +49,7 @@ public class AdditionalEditPane extends JPanel implements CheckInterface {
      * Create the panel.
      */
     private MyButton addBt, delBt, saveBt, restoreButton;
+    private PreviewTestProButton previewTestBt;
     private JTabbedPane tabbedPane;
 
     private OperatingTipButton additionalOperatingTipButton;
@@ -87,6 +89,10 @@ public class AdditionalEditPane extends JPanel implements CheckInterface {
         restoreButton = new MyButton("还原");
         restoreButton.addActionListener(listener);
         toolBar.add(restoreButton);
+
+        toolBar.add(Box.createHorizontalStrut(20));
+        previewTestBt = new PreviewTestProButton();
+        toolBar.add(previewTestBt);
 
         tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
         add(tabbedPane, BorderLayout.CENTER);
@@ -140,6 +146,21 @@ public class AdditionalEditPane extends JPanel implements CheckInterface {
             }
         }
     };
+
+    /**
+     * 预览测试
+     */
+    private void previewTest(){
+        if (!DataSourceEditHolder.previewTesting){
+            if (SysService.SYS_PARAM_SERVICE.getEnabledState()) {
+                new PreviewTestProjectFrame();
+            }else {
+                LazyCoderOptionPane.showMessageDialog(this, "(^_−)☆	这个数据源还没用录入内容，请录入内容并保存后再进行预览测试！");
+            }
+        }else {
+            LazyCoderOptionPane.showMessageDialog(this, "(^_−)☆	已经打开预览测试功能了！");
+        }
+    }
 
     private void restore() {
         tabbedPane.removeAll();

@@ -18,29 +18,24 @@ import com.lazycoder.uicodegeneration.generalframe.operation.component.AbstractC
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.CodeGenerationFormatUIComonentInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.FormatStructureModelInterface;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.component.FunctionAddMeta;
+import com.lazycoder.uiutils.component.FrameDragger;
 import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.uiutils.mycomponent.MyPopupButton;
+import com.lazycoder.uiutils.mycomponent.MyPopupPanel;
 import com.lazycoder.uiutils.mycomponent.MyToolBar;
+import com.lazycoder.uiutils.popup.AfPopup;
 import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import lombok.Getter;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import lombok.Getter;
 
 public class FunctionAddInputPaneForCodeGeneration extends MyPopupButton
         implements CodeGenerationFormatUIComonentInterface, CodeGenerationComponentInterface,
@@ -130,6 +125,7 @@ public class FunctionAddInputPaneForCodeGeneration extends MyPopupButton
         buttonWidth = MORE_ICON.getIconWidth() + 7;
         paneWidth = DEAFAULT_FUNCTION_PANE_WIDTH;
         paneHeight = 450;
+        setDraggerFlag(true);
         setIcon(MORE_ICON);
         setSelectedIcon(MORE_PRESSED_ICON);
         functionAddOperationPane = new FunctionAddOperationPane(functionAddCodeControlPane);
@@ -343,6 +339,7 @@ public class FunctionAddInputPaneForCodeGeneration extends MyPopupButton
          */
         private static final long serialVersionUID = 872386809840651872L;
 
+        @Getter
         private MyToolBar toolBar;
 
         private JToggleButton ownMethodButton;
@@ -489,5 +486,38 @@ public class FunctionAddInputPaneForCodeGeneration extends MyPopupButton
             }
         };
     }
+
+    @Override
+    protected MyPopupPanel getPopupPanel(JComponent componentPane) {
+        return new MyPopupPanel(componentPane, this){
+            // 显示Popup
+            @Override
+            public void showPopup(Component owner, int x, int y, AfPopup.ClosingPolicy policy) {
+                Point pt = new Point(x, y);
+                SwingUtilities.convertPointToScreen(pt, owner);
+
+                // 创建弹出式窗口
+                JWindow popup = new JWindow(SwingUtilities.windowForComponent(owner));
+                popup.getRootPane().setContentPane(this);
+                popup.setSize(this.getPreferredSize());
+                popup.setLocation(pt.x, pt.y);
+
+                FrameDragger frameDragger = new FrameDragger();
+                frameDragger.applyTo(functionAddOperationPane);
+                frameDragger.applyTo(functionAddOperationPane.getToolBar());
+                frameDragger.applyTo(functionAddCodeControlPane.getParentScrollPane());
+//                frameDragger.applyTo(functionAddCodeControlPane);
+
+                // 添加监控 （grabber内部已经实现“当点击在popup窗口之外时自动关闭popup”的逻辑)
+                this.mouseGrabber = getMouseGrabber(owner, popup);
+                mouseGrabber.installListeners(policy);
+                // 显示弹出式窗口
+                popup.setVisible(true);
+            }
+
+        };
+    }
+
+
 
 }

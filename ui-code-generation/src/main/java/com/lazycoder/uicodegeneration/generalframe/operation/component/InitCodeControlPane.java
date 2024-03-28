@@ -9,11 +9,14 @@ import com.lazycoder.uicodegeneration.PathFind;
 import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
 import com.lazycoder.uicodegeneration.component.operation.container.InitOpratingContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
+import com.lazycoder.uicodegeneration.component.operation.container.component.InitCodeControlPaneUI;
 import com.lazycoder.uicodegeneration.component.operation.container.sendparam.InitOperatingContainerParam;
 import com.lazycoder.uicodegeneration.generalframe.operation.AbstractFormatControlPane;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.InitCodeControlPaneModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.InitOpratingContainerModel;
+import com.lazycoder.uiutils.folder.Folder;
+import com.lazycoder.uiutils.utils.SysUtil;
 import java.util.ArrayList;
 
 
@@ -30,6 +33,11 @@ public class InitCodeControlPane extends AbstractCodeControlPane {
         PathFind pathFind = new PathFind(MarkElementName.INIT_MARK, PathFind.COMMAND_TYPE);
         setPathFind(pathFind);
         setName("initCode");
+    }
+
+    @Override
+    protected void setFolderPaneUI() {
+        setUI(new InitCodeControlPaneUI());
     }
 
     /**
@@ -130,6 +138,20 @@ public class InitCodeControlPane extends AbstractCodeControlPane {
             }
         }
         return codeSerialNumber;
+    }
+
+    /**
+     * 添加功能容器
+     *
+     * @param container
+     */
+    @Override
+    public void addContainer(Folder container) {
+        tabs.add(container);
+        this.add(container);
+        // 为该面板添加抽屉事件
+        ((InitCodeControlPaneUI) ui).addTab(container);
+        SysUtil.updateFrameUI(container);
     }
 
     @Override

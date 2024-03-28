@@ -19,9 +19,9 @@ import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.FileUtil;
 import com.lazycoder.utils.StringUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -29,13 +29,6 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
 
 
 public class AdditionalOperationPane extends JPanel {
@@ -97,6 +90,7 @@ public class AdditionalOperationPane extends JPanel {
      * @param label
      */
     public void addMenu(AdditionalSelectionLabel label) {
+        functionMenu.setEnabled(true);
         menu.removeAll();
         functionMenu.removeAll();
         menu.add(addAdditionalFormatControlPaneMenuItem);// 加载添加这个格式的菜单
@@ -160,6 +154,12 @@ public class AdditionalOperationPane extends JPanel {
                     }
                 }
             }
+
+            if(additionalFunctionFeatureList.size()==0){
+                functionMenu.setEnabled(false);
+            }
+        }else {
+            functionMenu.setEnabled(false);
         }
         // MyOptionPane.showMessageDialog(null, "无法获取数据，请查看是否选中正确的数据库");
     }

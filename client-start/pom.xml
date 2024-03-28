@@ -128,12 +128,6 @@
 
         <dependency>
             <groupId>com.lazycoder</groupId>
-            <artifactId>ui-code-generation</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.lazycoder</groupId>
             <artifactId>ui-datasource-edit</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -154,6 +148,14 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <classifier>exec</classifier>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
 

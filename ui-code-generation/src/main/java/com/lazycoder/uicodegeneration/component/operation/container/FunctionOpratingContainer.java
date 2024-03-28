@@ -26,9 +26,10 @@ import com.lazycoder.uicodegeneration.generalframe.tool.CodeIDGenerator;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.AbstractCommandOperatingContainerModel;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.container.FunctionOpratingContainerModel;
+import lombok.Getter;
+
 import java.io.File;
 import java.util.ArrayList;
-import lombok.Getter;
 
 
 public class FunctionOpratingContainer extends AbstractCommandOpratingContainer {
@@ -241,6 +242,7 @@ public class FunctionOpratingContainer extends AbstractCommandOpratingContainer 
                                                             setPropertyTempList, codeShowPane, moduleInfo, module, this.getModuleId()
                                                     );
                                                 }
+                                                OpratingContainerStaticMethod.addCommandContainerImportCodes(codeShowPane, codeModel.getImportCodeParam());
                                             }
                                         }
                                     }
@@ -285,6 +287,7 @@ public class FunctionOpratingContainer extends AbstractCommandOpratingContainer 
                                             , moduleInfo, module, this.getModuleId()
                                     );
                                 }
+                                OpratingContainerStaticMethod.addCommandContainerImportCodes(this.functionOperatingContainerParam.getFormatControlPane().getDefaultPane(), codeModel.getImportCodeParam());
                             }
                         }
                     }
@@ -326,6 +329,7 @@ public class FunctionOpratingContainer extends AbstractCommandOpratingContainer 
                                                             , moduleInfo, module, this.getModuleId()
                                                     );
                                                 }
+                                                OpratingContainerStaticMethod.addCommandContainerImportCodes(codeShowPane, codeModel.getImportCodeParam());
                                             }
                                         }
                                     }
@@ -338,7 +342,7 @@ public class FunctionOpratingContainer extends AbstractCommandOpratingContainer 
                                 commandAddRelatedAttribute.setCodeLabelId(codeModel.getCodeLabelId());
 
                                 OpratingContainerStaticMethod.generateCodeFor_ADD_TO_THE_FIRST_CORRESPONDING_MARK_OTHER_ATTRIBUTE(
-                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(),
+                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(), codeModel.getImportCodeParam(),
                                         commandAddRelatedAttribute, this.functionOperatingContainerParam,
                                         codeModel.getCodeUsePropertyParam(),inserNewLineOrNot,
                                         moduleInfo, module, this.getModuleId()
@@ -351,7 +355,7 @@ public class FunctionOpratingContainer extends AbstractCommandOpratingContainer 
                                 commandAddRelatedAttribute.setCodeLabelId(codeModel.getCodeLabelId());
 
                                 OpratingContainerStaticMethod.generateCodeFor_STEP_BY_STEP_TO_FIND_CORRESPONDING_MARK_OTHER_ATTRIBUTE(
-                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(),
+                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(), codeModel.getImportCodeParam(),
                                         commandAddRelatedAttribute,
                                         this.functionOperatingContainerParam,
                                         codeModel.getCodeUsePropertyParam(),inserNewLineOrNot,

@@ -114,7 +114,7 @@ public class SetButton extends MyPopupButton {
         moduleTypeContainerParam.setFormatControlPane(this.initOperatingContainerParam.getFormatControlPane());
         moduleTypeContainerParam.setModule(this.initOperatingContainerParam.getModule());
         moduleTypeContainerParam.setModuleInfo(this.initOperatingContainerParam.getModuleInfo());
-        moduleTypeContainerParam.setSetButton(this);
+        //moduleTypeContainerParam.setSetButton(this);
     }
 
 

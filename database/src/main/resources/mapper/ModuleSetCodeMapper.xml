@@ -20,7 +20,7 @@
         ordinal, codeOrdinal,
         codeFormatParam,
         codeLabelId, codeUsePropertyParam,
-        pathParam )
+        pathParam , importCodeParam)
         values
         <foreach collection="list" item="ModuleSetCodeModel"
                  index="index" separator=",">
@@ -30,8 +30,8 @@
             #{ModuleSetCodeModel.ordinal},
             #{ModuleSetCodeModel.codeOrdinal},
             #{ModuleSetCodeModel.codeFormatParam},
-            #{ModuleSetCodeModel.codeLabelId},#{ModuleSetCodeModel.codeUsePropertyParam},
-            #{ModuleSetCodeModel.pathParam}
+            #{ModuleSetCodeModel.codeLabelId}, #{ModuleSetCodeModel.codeUsePropertyParam},
+            #{ModuleSetCodeModel.pathParam}, #{ModuleSetCodeModel.importCodeParam}
             )
         </foreach>
     </insert>

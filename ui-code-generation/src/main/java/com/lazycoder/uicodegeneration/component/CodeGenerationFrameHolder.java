@@ -16,18 +16,17 @@ import com.lazycoder.uicodegeneration.generalframe.operation.AdditionalFormatCon
 import com.lazycoder.uicodegeneration.generalframe.operation.CodeControlTabbedPane;
 import com.lazycoder.uicodegeneration.generalframe.operation.component.AbstractAdditiveMethodCodePane;
 import com.lazycoder.uicodegeneration.generalframe.operation.component.BusinessLogicCodeControlPane;
-import com.lazycoder.uicodegeneration.generalframe.palette.FeatureSelectedPane;
+import com.lazycoder.uicodegeneration.generalframe.palette.FeatureSelectedTabPane;
 import com.lazycoder.uicodegeneration.generalframe.palette.additional.AdditionalOperationPane;
 import com.lazycoder.uicodegeneration.generalframe.variable.AbstractVariable;
 import com.lazycoder.uicodegeneration.generalframe.variable.holder.AbstractVariableHolder;
 import com.lazycoder.uicodegeneration.generalframe.variable.holder.CustomVariableHolder;
 import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.uiutils.htmlstyte.HtmlPar;
-import java.awt.Color;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
 
 /**
  * 代码生成界面共用的变量参数
@@ -62,7 +61,7 @@ public class CodeGenerationFrameHolder extends GeneralHolder {
     /**
      * 方法选择面板
      */
-    public static FeatureSelectedPane featureSelectedPane = null;
+    public static FeatureSelectedTabPane featureSelectedPane = null;
 
     /**
      * 可选模板业务方法的操作选择面板
@@ -107,29 +106,22 @@ public class CodeGenerationFrameHolder extends GeneralHolder {
                         additiveMethodCodePane.setCurrentSelected(true);
 
                     } else {//这个模板没有添加业务逻辑标记
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane = null;
+                        if (CodeGenerationFrameHolder.currentAdditiveMethodCodePane != null) {
+                            CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
+                            CodeGenerationFrameHolder.currentAdditiveMethodCodePane = null;
+                        }
                     }
                 } else {//是功能拓展面板
-                    CodeGenerationFrameHolder.currentAdditiveMethodCodePane = additiveMethodCodePane;
-                    additiveMethodCodePane.setCurrentSelected(true);
-                }
-            } else {//当前有添加功能的面板
-                if (CodeGenerationFrameHolder.currentFormatControlPane.getBusinessLogicCodePane() == additiveMethodCodePane) {//是当前的业务逻辑面板
-                    if (CodeGenerationFrameHolder.currentFormatControlPane.isHaveBusinessLogicMarkFlag()) {//这个模板有添加业务逻辑标记
-
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
+                    if (CodeGenerationFrameHolder.currentAdditiveMethodCodePane != null) {
                         CodeGenerationFrameHolder.currentAdditiveMethodCodePane = additiveMethodCodePane;
                         additiveMethodCodePane.setCurrentSelected(true);
-                    } else {//这个模板没有添加业务逻辑标记
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane = null;
                     }
-                } else {
-                    if (additiveMethodCodePane instanceof BusinessLogicCodeControlPane &&
-                            additiveMethodCodePane.getFormatControlPane() != null) {//是业务逻辑面板
+                }
+            } else {//当前有添加功能的面板
+                if (CodeGenerationFrameHolder.currentAdditiveMethodCodePane != null) {
+                    if (CodeGenerationFrameHolder.currentFormatControlPane.getBusinessLogicCodePane() == additiveMethodCodePane) {//是当前的业务逻辑面板
+                        if (CodeGenerationFrameHolder.currentFormatControlPane.isHaveBusinessLogicMarkFlag()) {//这个模板有添加业务逻辑标记
 
-                        if (additiveMethodCodePane.getFormatControlPane().isHaveBusinessLogicMarkFlag()) {//这个模板有添加业务逻辑标记
                             CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
                             CodeGenerationFrameHolder.currentAdditiveMethodCodePane = additiveMethodCodePane;
                             additiveMethodCodePane.setCurrentSelected(true);
@@ -137,10 +129,23 @@ public class CodeGenerationFrameHolder extends GeneralHolder {
                             CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
                             CodeGenerationFrameHolder.currentAdditiveMethodCodePane = null;
                         }
-                    } else {//是功能拓展面板
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
-                        CodeGenerationFrameHolder.currentAdditiveMethodCodePane = additiveMethodCodePane;
-                        additiveMethodCodePane.setCurrentSelected(true);
+                    } else {
+                        if (additiveMethodCodePane instanceof BusinessLogicCodeControlPane &&
+                                additiveMethodCodePane.getFormatControlPane() != null) {//是业务逻辑面板
+
+                            if (additiveMethodCodePane.getFormatControlPane().isHaveBusinessLogicMarkFlag()) {//这个模板有添加业务逻辑标记
+                                CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
+                                CodeGenerationFrameHolder.currentAdditiveMethodCodePane = additiveMethodCodePane;
+                                additiveMethodCodePane.setCurrentSelected(true);
+                            } else {//这个模板没有添加业务逻辑标记
+                                CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
+                                CodeGenerationFrameHolder.currentAdditiveMethodCodePane = null;
+                            }
+                        } else {//是功能拓展面板
+                            CodeGenerationFrameHolder.currentAdditiveMethodCodePane.setCurrentSelected(false);
+                            CodeGenerationFrameHolder.currentAdditiveMethodCodePane = additiveMethodCodePane;
+                            additiveMethodCodePane.setCurrentSelected(true);
+                        }
                     }
                 }
             }

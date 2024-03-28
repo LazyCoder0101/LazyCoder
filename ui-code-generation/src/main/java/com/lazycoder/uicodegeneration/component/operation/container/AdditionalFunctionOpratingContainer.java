@@ -232,6 +232,7 @@ public class AdditionalFunctionOpratingContainer extends AbstractCommandOprating
                                                     codeResponseParam.getCodeListLocationInfoList());
                                             if (flag) {
                                                 CodeGenerationFrameHolder.codeShowPanel.setSelectedCodePane(codeShowPane);
+                                                OpratingContainerStaticMethod.addCommandContainerImportCodes(codeShowPane, codeModel.getImportCodeParam());
                                             }
                                         }
                                     }
@@ -264,11 +265,16 @@ public class AdditionalFunctionOpratingContainer extends AbstractCommandOprating
                             codeListLocation.addCodePathFindForMark(markElement, pathFind);
                             codeListLocationArrayList.add(codeListLocation);
 
-                            OpratingContainerStaticMethod.generateCode(this,
+                            boolean addFlag = OpratingContainerStaticMethod.generateCode(this,
                                     this.additionalFunctionOperatingContainerParam.getFormatControlPane().getDefaultPane(), commandAddRelatedAttribute,
                                     codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(), codeModel.getCodeLabelId(),
                                     inserNewLineOrNot,
                                     codeListLocationArrayList);
+                            if (addFlag){
+                                OpratingContainerStaticMethod.addCommandContainerImportCodes(
+                                        this.additionalFunctionOperatingContainerParam.getFormatControlPane().getDefaultPane(),
+                                        codeModel.getImportCodeParam());
+                            }
                         }
                     }
                     CodeGenerationFrameHolder.codeShowPanel.setSelectedCodePane(
@@ -304,6 +310,9 @@ public class AdditionalFunctionOpratingContainer extends AbstractCommandOprating
                                             if (flag) {
                                                 CodeGenerationFrameHolder.codeShowPanel.setSelectedCodePane(codeShowPane);
                                                 codeInserFlag = true;
+                                                OpratingContainerStaticMethod.addCommandContainerImportCodes(
+                                                        this.additionalFunctionOperatingContainerParam.getFormatControlPane().getDefaultPane(),
+                                                        codeModel.getImportCodeParam());
                                             }
                                         }
                                     }
@@ -316,7 +325,7 @@ public class AdditionalFunctionOpratingContainer extends AbstractCommandOprating
                                 commandAddRelatedAttribute.setCodeLabelId(codeModel.getCodeLabelId());
 
                                 OpratingContainerStaticMethod.generateCodeFor_ADD_TO_THE_FIRST_CORRESPONDING_MARK_OTHER_ATTRIBUTE(
-                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(),
+                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(), codeModel.getImportCodeParam(),
                                         commandAddRelatedAttribute,
                                         this.additionalFunctionOperatingContainerParam,
                                         null, inserNewLineOrNot,null, null, null
@@ -329,7 +338,7 @@ public class AdditionalFunctionOpratingContainer extends AbstractCommandOprating
                                 commandAddRelatedAttribute.setCodeLabelId(codeModel.getCodeLabelId());
 
                                 OpratingContainerStaticMethod.generateCodeFor_STEP_BY_STEP_TO_FIND_CORRESPONDING_MARK_OTHER_ATTRIBUTE(
-                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(),
+                                        this, codeModel.getCodeFormatParam(), codeModel.getCodeOrdinal(), codeModel.getImportCodeParam(),
                                         commandAddRelatedAttribute,
                                         this.additionalFunctionOperatingContainerParam,
                                         null, inserNewLineOrNot,

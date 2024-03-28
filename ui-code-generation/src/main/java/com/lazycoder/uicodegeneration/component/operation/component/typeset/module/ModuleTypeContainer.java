@@ -6,6 +6,7 @@ import com.lazycoder.lazycodercommon.vo.FunctionUseProperty;
 import com.lazycoder.service.fileStructure.SysFileStructure;
 import com.lazycoder.service.service.SysService;
 import com.lazycoder.uicodegeneration.component.CodeGenerationFrameHolder;
+import com.lazycoder.uicodegeneration.component.operation.OperatingPaneBusinessTraverse;
 import com.lazycoder.uicodegeneration.component.operation.container.AbstractCommandOpratingContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.ModuleSetOpratingContainer;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
@@ -17,10 +18,10 @@ import com.lazycoder.uiutils.htmlstyte.HTMLText;
 import com.lazycoder.uiutils.mycomponent.MyButton;
 import com.lazycoder.uiutils.utils.SysUtil;
 import com.lazycoder.utils.swing.LazyCoderOptionPane;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.LayoutManager;
+import lombok.Getter;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -28,16 +29,10 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import lombok.Getter;
 
-public class ModuleTypeContainer extends Folder {//} implements Runnable {
+public class ModuleTypeContainer extends Folder implements OperatingPaneBusinessTraverse {//} implements Runnable {
 
-    public final static Double THE_PROPORTION = 0.304;
+    public final static Double THE_PROPORTION = 0.32;
     /**
      *
      */
@@ -158,10 +153,12 @@ public class ModuleTypeContainer extends Folder {//} implements Runnable {
      *
      * @param moduleId
      */
+    @Override
     public void delModuleOpratingContainerFromComponent(String moduleId) {
         moduleTypeCodeControlPane.delModuleOpratingContainerFromComponent(moduleId);
     }
 
+    @Override
     public void collapseThis() {
         moduleTypeCodeControlPane.collapseThis();
     }
@@ -185,8 +182,14 @@ public class ModuleTypeContainer extends Folder {//} implements Runnable {
         }
     }
 
+    @Override
     public void delThis() {
         moduleTypeCodeControlPane.delThis();
+    }
+
+    @Override
+    public ArrayList<OpratingContainerInterface> getAllOpratingContainer() {
+        return null;
     }
 
     /**
@@ -283,6 +286,26 @@ public class ModuleTypeContainer extends Folder {//} implements Runnable {
                 }
             }
         }
+    }
+
+    @Override
+    public void functionNameSynchronousChange(int functionNameId) {
+        moduleTypeCodeControlPane.functionNameSynchronousChange(functionNameId);
+    }
+
+    @Override
+    public void functionNameSynchronousDelete(int functionNameId) {
+        moduleTypeCodeControlPane.functionNameSynchronousDelete(functionNameId);
+    }
+
+    @Override
+    public void variableSynchronousChange(int variableId) {
+        moduleTypeCodeControlPane.functionNameSynchronousDelete(variableId);
+    }
+
+    @Override
+    public void variableSynchronousDelete(int variableId) {
+        moduleTypeCodeControlPane.functionNameSynchronousDelete(variableId);
     }
 
     /**

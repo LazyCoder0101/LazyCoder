@@ -2,6 +2,7 @@ package com.lazycoder.uicodegeneration.generalframe.operation.component;
 
 import com.lazycoder.uicodegeneration.PathFind;
 import com.lazycoder.uicodegeneration.component.operation.CodeControlPaneBusinessTraverse;
+import com.lazycoder.uicodegeneration.component.operation.OperatingPaneBusinessTraverse;
 import com.lazycoder.uicodegeneration.component.operation.container.OpratingContainerInterface;
 import com.lazycoder.uicodegeneration.generalframe.operation.AbstractFormatControlPane;
 import com.lazycoder.uicodegeneration.proj.stostr.operation.base.AbstractCodeControlPaneModel;
@@ -10,12 +11,13 @@ import com.lazycoder.uicodegeneration.proj.stostr.operation.base.GeneralCodeCont
 import com.lazycoder.uiutils.folder.Folder;
 import com.lazycoder.uiutils.folder.FolderPane;
 import com.lazycoder.uiutils.utils.SysUtil;
-import java.awt.Component;
-import java.util.ArrayList;
-import javax.swing.JScrollPane;
 import lombok.Getter;
 import lombok.Setter;
 import org.jb2011.lnf.beautyeye.ch4_scroll.BEScrollPaneUI;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
 
 /******
  *
@@ -23,7 +25,8 @@ import org.jb2011.lnf.beautyeye.ch4_scroll.BEScrollPaneUI;
  *
  */
 public abstract class AbstractCodeControlPane extends FolderPane
-        implements GeneralCodeControlPaneInterface, CodeControlPaneBusinessTraverse {
+        implements GeneralCodeControlPaneInterface, CodeControlPaneBusinessTraverse , OperatingPaneBusinessTraverse {
+
 
     /**
      *
@@ -172,6 +175,38 @@ public abstract class AbstractCodeControlPane extends FolderPane
             }
         }
 //        }
+    }
+
+    @Override
+    public void functionNameSynchronousChange(int functionNameId) {
+        ArrayList<OpratingContainerInterface> containerList = getAllOpratingContainerListInThisPane();
+        for (OpratingContainerInterface container : containerList) {
+            container.functionNameSynchronousChange(functionNameId);
+        }
+    }
+
+    @Override
+    public void functionNameSynchronousDelete(int functionNameId) {
+        ArrayList<OpratingContainerInterface> containerList = getAllOpratingContainerListInThisPane();
+        for (OpratingContainerInterface container : containerList) {
+            container.functionNameSynchronousDelete(functionNameId);
+        }
+    }
+
+    @Override
+    public void variableSynchronousChange(int variableId) {
+        ArrayList<OpratingContainerInterface> containerList = getAllOpratingContainerListInThisPane();
+        for (OpratingContainerInterface container : containerList) {
+            container.variableSynchronousChange(variableId);
+        }
+    }
+
+    @Override
+    public void variableSynchronousDelete(int variableId) {
+        ArrayList<OpratingContainerInterface> containerList = getAllOpratingContainerListInThisPane();
+        for (OpratingContainerInterface container : containerList) {
+            container.variableSynchronousDelete(variableId);
+        }
     }
 
 

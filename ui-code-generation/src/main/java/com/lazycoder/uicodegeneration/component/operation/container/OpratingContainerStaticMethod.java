@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.lazycoder.database.CodeFormatFlagParam;
 import com.lazycoder.database.common.MarkElementName;
+import com.lazycoder.database.model.CommandContainerImportCode;
 import com.lazycoder.database.model.ImportCode;
 import com.lazycoder.database.model.Module;
 import com.lazycoder.database.model.ModuleInfo;
@@ -27,6 +28,7 @@ import com.lazycoder.uicodegeneration.generalframe.codeshown.CodeShowPane;
 import com.lazycoder.uicodegeneration.generalframe.operation.AbstractFormatControlPane;
 import com.lazycoder.uicodegeneration.generalframe.operation.AdditionalFormatControlPane;
 import com.lazycoder.uicodegeneration.generalframe.operation.MainFormatControlPane;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -221,9 +223,22 @@ public class OpratingContainerStaticMethod {
         return codeShowPane;
     }
 
+    /**
+     * 在指定位置生成代码
+     *
+     * @param opratingContainer
+     * @param codeShowPane
+     * @param commandAddRelatedAttribute
+     * @param codeStatementParam
+     * @param codeOrdinal
+     * @param codeLabelId
+     * @param inserNewLineOrNot
+     * @param codeListLocationInfoList
+     * @return
+     */
     public static boolean generateCode(AbstractCommandOpratingContainer opratingContainer, CodeShowPane codeShowPane,
                                        CommandAddRelatedAttribute commandAddRelatedAttribute,
-                                       String codeStatementParam, int codeOrdinal, String codeLabelId,boolean inserNewLineOrNot,
+                                       String codeStatementParam, int codeOrdinal, String codeLabelId, boolean inserNewLineOrNot,
                                        ArrayList<CodeListLocation> codeListLocationInfoList) {
         boolean returnFlag = false;
         int situation = 1;
@@ -437,6 +452,7 @@ public class OpratingContainerStaticMethod {
             AbstractCommandOpratingContainer opratingContainer,
             String codeStatementParam,
             int codeOrdinal,
+            String importCodeParam,
             CommandAddRelatedAttribute commandAddRelatedAttribute,
             GeneralOperatingContainerParam operatingContainerParam,
             String codeUsePropertyParam,
@@ -499,6 +515,10 @@ public class OpratingContainerStaticMethod {
                                                         moduleInfo, module, moduleId
                                                 );
                                             }
+
+                                            OpratingContainerStaticMethod.addCommandContainerImportCodes(
+                                                    codeShowPaneTemp,
+                                                    importCodeParam);
                                         }
                                     }
                                 }
@@ -539,6 +559,10 @@ public class OpratingContainerStaticMethod {
                                     );
                                 }
                             }
+
+                            OpratingContainerStaticMethod.addCommandContainerImportCodes(
+                                    codeShowPane,
+                                    importCodeParam);
                         }
                     }
                 }
@@ -708,6 +732,7 @@ public class OpratingContainerStaticMethod {
             AbstractCommandOpratingContainer thisOpratingContainer,
             String codeStatementParam,
             int codeOrdinal,
+            String importCodeParam,
             CommandAddRelatedAttribute commandAddRelatedAttribute,
             GeneralOperatingContainerParam operatingContainerParam,
             String codeUsePropertyParam,
@@ -763,6 +788,10 @@ public class OpratingContainerStaticMethod {
                                         moduleInfo, module, moduleId
                                 );
                             }
+
+                            OpratingContainerStaticMethod.addCommandContainerImportCodes(
+                                    codeShowPane,
+                                    importCodeParam);
                         }
                     }
                 }
@@ -816,6 +845,10 @@ public class OpratingContainerStaticMethod {
                                                     moduleInfo, module, moduleId
                                             );
                                         }
+
+                                        OpratingContainerStaticMethod.addCommandContainerImportCodes(
+                                                codeShowPaneTemp,
+                                                importCodeParam);
                                     }
                                 }
                             }
@@ -895,8 +928,8 @@ public class OpratingContainerStaticMethod {
 
                     if (!returnFlag) {//本次检查parentOpratingContainer对应的代码位置，找不到合适的位置，继续再向上一层查看有没有合适的位置
                         returnFlag = generateCodeFor_STEP_BY_STEP_TO_FIND_CORRESPONDING_MARK_OTHER_ATTRIBUTE(
-                                thisOpratingContainer, codeStatementParam, codeOrdinal, commandAddRelatedAttribute, operatingContainerParam,
-                                codeUsePropertyParam,inserNewLineOrNot, moduleInfo, module, moduleId, parentOpratingContainer
+                                thisOpratingContainer, codeStatementParam, codeOrdinal, importCodeParam, commandAddRelatedAttribute, operatingContainerParam,
+                                codeUsePropertyParam, inserNewLineOrNot, moduleInfo, module, moduleId, parentOpratingContainer
                         );
 
                     }
@@ -1396,6 +1429,36 @@ public class OpratingContainerStaticMethod {
 
                         codeShowPane.addImportCode(markElement, importCode);
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * 添加命令模型对应的引入代码
+     *
+     * @param codeShowPane
+     * @param commandCodeModelImportCodeParam
+     */
+    public static void addCommandContainerImportCodes(CodeShowPane codeShowPane, String commandCodeModelImportCodeParam) {
+        if (commandCodeModelImportCodeParam != null) {
+            ArrayList<CommandContainerImportCode> list = JSON.parseObject(commandCodeModelImportCodeParam,
+                    new TypeReference<ArrayList<CommandContainerImportCode>>() {
+                    });
+            if (codeShowPane != null) {
+                ImportMarkElement markElement;
+                ImportCode importCode;
+                for (CommandContainerImportCode commandContainerImportCode : list) {
+                    markElement = new ImportMarkElement();
+                    markElement.setOrdinal(commandContainerImportCode.getOrdinal());
+                    markElement.setCodeLabelId(commandContainerImportCode.getCodeLabelId());
+
+                    importCode = new ImportCode();
+                    importCode.setOrdinal(commandContainerImportCode.getOrdinal());
+                    importCode.setCode(commandContainerImportCode.getCode());
+                    importCode.setCodeLabelId(commandContainerImportCode.getCodeLabelId());
+
+                    codeShowPane.addImportCode(markElement, importCode);
                 }
             }
         }

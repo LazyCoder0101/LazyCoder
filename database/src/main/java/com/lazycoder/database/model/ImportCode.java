@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 引入代码
+ * 引入代码（针对模块的）
  *
  * @author Administrator
  */

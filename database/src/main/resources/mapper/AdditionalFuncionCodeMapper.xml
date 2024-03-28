@@ -16,7 +16,7 @@
         (additionalSerialNumber,
         ordinal, codeOrdinal,
         codeFormatParam,
-        codeLabelId, codeUsePropertyParam)
+        codeLabelId, codeUsePropertyParam, importCodeParam)
         values
         <foreach collection="list" item="additionalFunctionCodeModel" index="index"
                  separator=",">
@@ -25,7 +25,8 @@
             #{additionalFunctionCodeModel.ordinal},
             #{additionalFunctionCodeModel.codeOrdinal},
             #{additionalFunctionCodeModel.codeFormatParam},
-            #{additionalFunctionCodeModel.codeLabelId},#{additionalFunctionCodeModel.codeUsePropertyParam}
+            #{additionalFunctionCodeModel.codeLabelId}, #{additionalFunctionCodeModel.codeUsePropertyParam},
+            #{additionalFunctionCodeModel.importCodeParam}
             )
         </foreach>
     </insert>

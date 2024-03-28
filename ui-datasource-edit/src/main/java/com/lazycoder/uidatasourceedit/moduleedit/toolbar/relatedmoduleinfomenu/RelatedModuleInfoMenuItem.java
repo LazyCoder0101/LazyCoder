@@ -5,17 +5,20 @@ import com.lazycoder.database.model.formodule.ModuleStaticMethod;
 import com.lazycoder.service.ModuleUseSetting;
 import com.lazycoder.service.service.SysService;
 import com.lazycoder.service.vo.AssociatedModule;
+import com.lazycoder.service.vo.datasourceedit.command.ContainerModel;
+import com.lazycoder.service.vo.datasourceedit.general.AbstractEditContainerModel;
 import com.lazycoder.uidatasourceedit.DataSourceEditHolder;
 import com.lazycoder.uidatasourceedit.ModuleEditPaneHolder;
 import com.lazycoder.uiutils.mycomponent.multistatecomponent.LazyCoderMultiStateMenuItem;
-import java.awt.Color;
+import lombok.Getter;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 
 /**
  * 编辑当前编辑模块相关的模块信息的菜单项
@@ -108,6 +111,16 @@ public class RelatedModuleInfoMenuItem extends LazyCoderMultiStateMenuItem {
                 if (ModuleEditPaneHolder.relatedModuleInfoMenu != null) {
                     if (isModuleSelectedNull()) {
                         ModuleEditPaneHolder.relatedModuleInfoMenu.setModuleSelectedNull(RelatedModuleInfoMenuItem.this);
+
+                        ArrayList<AbstractEditContainerModel> moduleEditPaneEditContainerModelList = DataSourceEditHolder.moduleEditPane.getAllEditContainerModel();
+                        if (moduleEditPaneEditContainerModelList != null) {
+                            for (AbstractEditContainerModel model : moduleEditPaneEditContainerModelList) {
+                                if (model instanceof ContainerModel) {
+                                    ContainerModel containerModel = (ContainerModel) model;
+
+                                }
+                            }
+                        }
 
                     } else if (isPreUseModule()) {
                         boolean state = ModuleEditPaneHolder.relatedModuleInfoMenu.usingModule(RelatedModuleInfoMenuItem.this);
